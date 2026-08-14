@@ -12,6 +12,7 @@ This repository is the public layer of project 13 AI Native. It keeps the core f
 - [AI Native Personal AI OS](docs/ai-native-personal-ai-os.html)
 - [AI Native Knowledge Base Guide](docs/ai-native-knowledge-base-guide.html)
 - [AI Native Prompts](docs/ai-native-prompts.html)
+- [Pages Overview](PAGES.md)
 
 The pages are in Russian because that is the language of the original project material.
 
