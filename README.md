@@ -16,11 +16,11 @@ to:
 
 ## What is here
 
-- [AI Native in Brief](docs/AI%20Native%20in%20Brief.md)
-- [AI Native Principles](docs/AI%20Native%20Principles.md)
-- [AI Native Personal AI OS](docs/AI%20Native%20Personal%20AI%20OS.md)
-- [AI Native Prompts](docs/AI%20Native%20Prompts.md)
-- [AI Native Knowledge Base Guide](docs/AI%20Native%20Knowledge%20Base%20Guide.md)
+- [AI Native in Brief](docs/ai-native-in-brief.md)
+- [AI Native Principles](docs/ai-native-principles.md)
+- [AI Native Personal AI OS](docs/ai-native-personal-ai-os.md)
+- [AI Native Prompts](docs/ai-native-prompts.md)
+- [AI Native Knowledge Base Guide](docs/ai-native-knowledge-base-guide.md)
 
 The materials are in Russian because that is the language of the original project.
 
