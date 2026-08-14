@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Self Development w/ AI · Сессия 1</title>
+<style>
+  :root{
+    --bg:#080a0c;--bg2:#0e1117;--fg:#e8eaf0;--muted:#8b91a3;--dim:#4e5468;
+    --green:#4ade80;--green-lo:rgba(74,222,128,.1);--amber:#fbbf24;
+    --card:#111318;--card2:#181c25;--line:#1e232f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden}
+  body{background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  .deck{position:fixed;inset:0}
+  /* 50/50: текст — левая половина, визуал — правая половина */
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:8vh 52vw 8vh 8vw;opacity:0;transition:opacity .32s ease;isolation:isolate}
+  .slide.active{display:flex;opacity:1}
+  .slide>*{max-width:100%}
+  .art{position:absolute;right:0;top:0;width:50%;height:100%;pointer-events:none;z-index:-1;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .art svg{width:88%;height:86%;max-width:580px;max-height:720px}
+  .art.mir svg{transform:scaleX(-1)}
+  @media (max-aspect-ratio:1/1),(max-width:820px){ .slide{padding:7vh 7vw} .art{display:none} }
+
+  .kicker{font-size:clamp(.65rem,1vw,.82rem);letter-spacing:.2em;text-transform:uppercase;color:var(--green);font-weight:600;margin-bottom:1.3rem;display:flex;align-items:center;gap:.6rem}
+  .kicker::before{content:"";width:24px;height:2px;background:var(--green);border-radius:2px}
+  h1{font-size:clamp(2.2rem,5vw,4.6rem);line-height:1.0;letter-spacing:-.025em;font-weight:700}
+  h1 .g{color:var(--green)}
+  h2{font-size:clamp(1.5rem,2.8vw,2.4rem);line-height:1.1;letter-spacing:-.015em;font-weight:650;margin-bottom:1.8rem}
+  h2 .g{color:var(--green)}
+  .g2{color:var(--amber)}
+  .lead{font-size:clamp(1rem,1.6vw,1.3rem);color:var(--muted);line-height:1.5;max-width:42ch;margin-top:1.3rem}
+  .meta{margin-top:2.2rem;color:var(--dim);font-size:clamp(.82rem,1.2vw,1rem);line-height:1.9}
+  .meta b{color:var(--fg);font-weight:600}
+  .meta .sep{color:var(--dim);padding:0 .4rem}
+  ul{list-style:none;display:flex;flex-direction:column;gap:.8rem;max-width:46ch}
+  li{position:relative;padding-left:1.5rem;font-size:clamp(.95rem,1.5vw,1.25rem);line-height:1.4;color:var(--fg)}
+  li::before{content:"";position:absolute;left:0;top:.6em;width:7px;height:7px;border-radius:50%;background:var(--green)}
+  li b,li strong{font-weight:680;color:#fff}
+  li .sub{display:block;color:var(--muted);font-size:.8em;margin-top:.2rem}
+  li.dim::before{background:var(--dim)}
+  li.warn::before{background:var(--amber)}
+  .hosts{display:grid;grid-template-columns:1fr;gap:1.4rem;max-width:none}
+  .host-name{font-size:clamp(1.2rem,2vw,1.7rem);font-weight:700;color:#fff;margin-bottom:.25rem}
+  .host-role{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--green);font-weight:600;margin-bottom:.6rem}
+  .host-facts{display:flex;flex-direction:column;gap:.25rem}
+  .host-fact{font-size:clamp(.82rem,1.3vw,1rem);color:var(--muted);line-height:1.3}
+  .host-fact b{color:var(--fg);font-weight:600}
+  .host-signal{margin-top:.7rem;font-size:clamp(.82rem,1.3vw,1rem);color:var(--fg);font-style:italic;line-height:1.35;border-left:2px solid var(--amber);padding-left:.8rem}
+  .route{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap;margin-bottom:1.8rem}
+  .route-step{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.4rem .8rem;font-size:clamp(.8rem,1.2vw,1rem);color:var(--fg);font-weight:500}
+  .route-step.hi{border-color:var(--green);color:var(--green);background:var(--green-lo)}
+  .route-arr{color:var(--dim);font-size:1.05rem}
+  .cal{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;max-width:none}
+  .cal-day{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.5rem .7rem;display:flex;gap:.5rem;align-items:baseline}
+  .cal-day .cn{font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--dim)}
+  .cal-day .cd{font-size:.7rem;color:var(--muted);min-width:3.2em}
+  .cal-day .ct{font-size:.74rem;color:var(--fg);line-height:1.2}
+  .cal-day.live{border-color:var(--green);background:var(--green-lo)}
+  .cal-day.live .cn{color:var(--green)}.cal-day.live .ct{color:#fff;font-weight:600}
+  .cal-day.oh{border-color:var(--amber)}.cal-day.oh .cn{color:var(--amber)}
+  .cal-day.demo{border-color:var(--amber)}.cal-day.demo .cn{color:var(--amber)}
+  .focus-box{background:var(--green-lo);border:1.5px solid var(--green);border-radius:16px;padding:1.8rem 2.1rem;max-width:none;margin-top:.3rem}
+  .focus-box .fb-kicker{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--green);font-weight:600;margin-bottom:.7rem}
+  .focus-box .fb-body{font-size:clamp(1.25rem,2vw,1.8rem);font-weight:600;color:#fff;line-height:1.25;letter-spacing:-.01em}
+  .focus-box .fb-sub{margin-top:.7rem;color:var(--muted);font-size:clamp(.9rem,1.4vw,1.15rem);line-height:1.4}
+  .demo-list{display:flex;flex-direction:column;gap:.7rem;max-width:none}
+  .demo-item{display:flex;align-items:flex-start;gap:.9rem;background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:.8rem 1.1rem}
+  .demo-item .di-num{font-size:.72rem;font-weight:700;color:var(--amber);min-width:1.5rem;padding-top:.1rem}
+  .demo-item .di-body{flex:1}
+  .demo-item .di-title{font-size:clamp(.92rem,1.4vw,1.15rem);font-weight:600;color:#fff;margin-bottom:.15rem}
+  .demo-item .di-desc{font-size:.8rem;color:var(--muted);line-height:1.3}
+  .hw-box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1.3rem 1.6rem;max-width:none;margin-top:.3rem}
+  .hw-box .hw-label{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--green);font-weight:600;margin-bottom:.7rem}
+  .hw-task{display:flex;align-items:flex-start;gap:.8rem;padding:.55rem 0;border-bottom:1px solid var(--line)}
+  .hw-task:last-child{border-bottom:none;padding-bottom:0}
+  .hw-task .hk{font-size:.72rem;font-weight:700;color:var(--amber);min-width:1.8rem}
+  .hw-task .hv{font-size:clamp(.88rem,1.4vw,1.1rem);color:var(--fg);line-height:1.3}
+  .hw-task .hv span{color:var(--muted);font-size:.85em}
+  .qa-big{font-size:clamp(3rem,7vw,6rem);font-weight:800;letter-spacing:-.03em;color:var(--amber);line-height:1;margin-bottom:.4rem}
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem;max-width:none}
+  .cards.g3{grid-template-columns:repeat(2,1fr)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1.2rem}
+  .card .ct{font-weight:680;color:#fff;font-size:clamp(.92rem,1.4vw,1.15rem);margin-bottom:.3rem}
+  .card .cd{color:var(--muted);font-size:.8rem;line-height:1.35}
+  .card .tag{display:inline-block;margin-top:.6rem;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--green);font-weight:600}
+  .card .tag.opt{color:var(--dim)}
+  .card .ck{color:var(--green);font-weight:800;margin-right:.4rem}
+  .arc{display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:none}
+  .arc-col{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1.1rem 1.3rem}
+  .arc-col.w2{border-color:var(--amber);background:rgba(251,191,36,.08)}
+  .arc-week{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);font-weight:600;margin-bottom:.35rem}
+  .arc-col.w1 .arc-week{color:var(--green)}.arc-col.w2 .arc-week{color:var(--amber)}
+  .arc-theme{font-size:clamp(1.05rem,1.7vw,1.4rem);font-weight:680;color:#fff;margin-bottom:.7rem;line-height:1.15}
+  .arc-col ul{gap:.45rem;max-width:none}
+  .arc-col li{font-size:clamp(.82rem,1.3vw,1.02rem)}
+  .src{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;max-width:none}
+  .src-item{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:.75rem .95rem}
+  .src-item .si-t{font-weight:650;color:#fff;font-size:clamp(.82rem,1.3vw,1.02rem);margin-bottom:.2rem}
+  .src-item .si-d{color:var(--muted);font-size:.72rem;line-height:1.3}
+  .sec-num{font-size:clamp(.7rem,1vw,.85rem);letter-spacing:.22em;text-transform:uppercase;color:var(--amber);font-weight:700;margin-bottom:1.1rem;display:flex;align-items:center;gap:.6rem}
+  .sec-num::before{content:"";width:24px;height:2px;background:var(--amber);border-radius:2px}
+  .sec-title{font-size:clamp(2.2rem,5.5vw,4.2rem);font-weight:760;color:#fff;letter-spacing:-.02em;line-height:1.02}
+  .sec-title .g2{color:var(--amber)}
+  .sec-sub{margin-top:1.3rem;font-size:clamp(1rem,1.6vw,1.35rem);color:var(--muted);max-width:30ch;line-height:1.5}
+  .progress{position:fixed;left:0;top:0;height:2px;background:linear-gradient(90deg,var(--green),var(--amber));transition:width .32s;z-index:30;box-shadow:0 0 10px rgba(74,222,128,.4)}
+  .counter{position:fixed;right:2.2vw;bottom:1.8vh;color:var(--dim);font-size:.8rem;font-variant-numeric:tabular-nums;z-index:30;letter-spacing:.05em}
+  .brand{position:fixed;left:2.2vw;bottom:1.8vh;color:var(--dim);font-size:.72rem;z-index:30;letter-spacing:.12em;text-transform:uppercase}
+  .hint{position:fixed;right:2.2vw;top:1.6vh;color:var(--dim);font-size:.68rem;z-index:30;opacity:.55}
+  .dots{position:fixed;left:50%;bottom:1.8vh;transform:translateX(-50%);display:flex;gap:6px;z-index:30}
+  .dots button{width:6px;height:6px;border-radius:50%;border:none;background:var(--line);cursor:pointer;padding:0;transition:background .2s,transform .2s}
+  .dots button.on{background:var(--green);transform:scale(1.4)}
+  .notes{position:fixed;left:0;right:0;bottom:0;max-height:40vh;overflow:auto;background:rgba(6,7,10,.97);border-top:1px solid var(--line);padding:1.4rem 9vw 1.8rem;z-index:40;transform:translateY(100%);transition:transform .28s ease}
+  .notes.show{transform:translateY(0)}
+  .notes h4{color:var(--green);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.6rem}
+  .notes p{color:#c8cdd8;font-size:.95rem;line-height:1.55;max-width:80ch}
+</style>
+</head>
+<body>
+
+<!-- ===== Библиотека визуалов: зелёный + янтарь, 20 мотивов ===== -->
+<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+  <defs>
+    <pattern id="d_g" width="11" height="11" patternUnits="userSpaceOnUse"><circle cx="5.5" cy="5.5" r="2.2" fill="#4ade80"/></pattern>
+    <pattern id="d_a" width="11" height="11" patternUnits="userSpaceOnUse"><circle cx="5.5" cy="5.5" r="2.2" fill="#fbbf24"/></pattern>
+    <pattern id="s_g" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="10" fill="#4ade80"/></pattern>
+    <pattern id="s_a" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="10" fill="#fbbf24"/></pattern>
+    <pattern id="h_g" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="4.5" fill="#4ade80"/></pattern>
+
+    <symbol id="orbital" viewBox="0 0 420 560">
+      <g><animateTransform attributeName="transform" type="rotate" from="0 210 280" to="360 210 280" dur="60s" repeatCount="indefinite"/>
+        <path d="M210 280 L390 280 A180 180 0 0 1 300 436 Z" fill="#4ade80" opacity=".8"/>
+        <path d="M210 280 L300 436 A180 180 0 0 1 120 436 Z" fill="url(#d_g)" opacity=".85"/>
+        <path d="M210 280 L120 436 A180 180 0 0 1 30 280 Z" fill="#4ade80" opacity=".5"/>
+        <path d="M210 280 L30 280 A180 180 0 0 1 120 124 Z" fill="url(#s_a)" opacity=".8"/>
+        <path d="M210 280 L120 124 A180 180 0 0 1 300 124 Z" fill="#fbbf24" opacity=".7"/>
+        <path d="M210 280 L300 124 A180 180 0 0 1 390 280 Z" fill="url(#d_g)" opacity=".85"/>
+      </g>
+      <circle cx="210" cy="280" r="30" fill="#080a0c"/>
+      <circle cx="210" cy="280" r="11" fill="#fbbf24"><animate attributeName="opacity" values="1;.6;1" dur="3s" repeatCount="indefinite"/></circle>
+    </symbol>
+
+    <symbol id="converge" viewBox="0 0 420 560">
+      <polygon points="40,60 40,250 210,280" fill="url(#d_g)" opacity=".8"><animateTransform attributeName="transform" type="translate" values="0 0;0 -10;0 0" dur="6s" repeatCount="indefinite"/></polygon>
+      <polygon points="380,310 380,500 210,280" fill="url(#s_a)" opacity=".7"><animateTransform attributeName="transform" type="translate" values="0 0;0 10;0 0" dur="6s" repeatCount="indefinite"/></polygon>
+      <polygon points="40,500 40,330 210,280" fill="#4ade80" opacity=".5"/>
+      <polygon points="380,60 380,230 210,280" fill="#fbbf24" opacity=".42"/>
+      <circle cx="210" cy="280" r="20" fill="#4ade80"><animate attributeName="r" values="20;28;20" dur="3s" repeatCount="indefinite"/></circle>
+      <circle cx="210" cy="280" r="9" fill="#080a0c"/>
+    </symbol>
+
+    <symbol id="path" viewBox="0 0 420 560">
+      <path d="M120 520 C 300 460 60 360 210 280 C 360 200 120 120 230 60" stroke="#4ade80" stroke-width="3" fill="none" opacity=".5" stroke-dasharray="10 8"><animate attributeName="stroke-dashoffset" values="600;0" dur="9s" repeatCount="indefinite"/></path>
+      <circle cx="120" cy="520" r="9" fill="url(#d_g)"/>
+      <circle cx="210" cy="280" r="13" fill="#4ade80"><animate attributeName="opacity" values=".7;1;.7" dur="3s" repeatCount="indefinite"/></circle>
+      <circle cx="230" cy="60" r="14" fill="#fbbf24"/>
+      <circle cx="300" cy="170" r="7" fill="url(#s_a)"/>
+      <circle r="6" fill="#fbbf24"><animateMotion dur="9s" repeatCount="indefinite" path="M120 520 C 300 460 60 360 210 280 C 360 200 120 120 230 60"/></circle>
+    </symbol>
+
+    <symbol id="grid" viewBox="0 0 420 560">
+      <g><animateTransform attributeName="transform" type="rotate" values="-3 210 280;3 210 280;-3 210 280" dur="12s" repeatCount="indefinite"/>
+        <rect x="90" y="160" width="76" height="76" rx="6" fill="url(#d_g)" opacity=".8"/>
+        <rect x="182" y="160" width="76" height="76" rx="6" fill="#4ade80" opacity=".5"/>
+        <rect x="274" y="160" width="76" height="76" rx="6" fill="url(#s_a)" opacity=".7"/>
+        <rect x="90" y="252" width="76" height="76" rx="6" fill="#4ade80" opacity=".45"/>
+        <rect x="182" y="252" width="76" height="76" rx="6" fill="#fbbf24" opacity=".65"/>
+        <rect x="274" y="252" width="76" height="76" rx="6" fill="url(#d_g)" opacity=".8"/>
+        <rect x="90" y="344" width="76" height="76" rx="6" fill="url(#s_g)" opacity=".7"/>
+        <rect x="182" y="344" width="76" height="76" rx="6" fill="url(#d_g)" opacity=".7"/>
+        <rect x="274" y="344" width="76" height="76" rx="6" fill="#4ade80" opacity=".5"/>
+      </g>
+    </symbol>
+
+    <symbol id="arc" viewBox="0 0 420 560">
+      <path d="M40 400 A170 170 0 0 1 380 400 L320 400 A110 110 0 0 0 100 400 Z" fill="url(#s_g)" opacity=".6"><animateTransform attributeName="transform" type="translate" values="0 0;0 -10;0 0" dur="7s" repeatCount="indefinite"/></path>
+      <path d="M120 400 A90 90 0 0 1 300 400 L262 400 A52 52 0 0 0 158 400 Z" fill="url(#d_a)" opacity=".7"><animateTransform attributeName="transform" type="translate" values="0 0;0 8;0 0" dur="6s" repeatCount="indefinite"/></path>
+      <circle cx="70" cy="330" r="8" fill="#4ade80" opacity=".5"/>
+      <circle cx="210" cy="225" r="11" fill="#fbbf24"><animate attributeName="opacity" values=".7;1;.7" dur="3s" repeatCount="indefinite"/></circle>
+      <circle cx="350" cy="330" r="8" fill="#4ade80" opacity=".6"/>
+    </symbol>
+
+    <symbol id="diamond" viewBox="0 0 420 560">
+      <g><animateTransform attributeName="transform" type="rotate" from="0 210 280" to="360 210 280" dur="40s" repeatCount="indefinite"/><polygon points="210,80 390,280 210,480 30,280" fill="url(#s_g)" opacity=".5"/></g>
+      <g><animateTransform attributeName="transform" type="rotate" from="0 210 280" to="-360 210 280" dur="26s" repeatCount="indefinite"/><polygon points="210,160 320,280 210,400 100,280" fill="url(#d_a)" opacity=".62"/></g>
+      <circle cx="210" cy="280" r="16" fill="#fbbf24" opacity=".22"><animate attributeName="r" values="16;26;16" dur="3s" repeatCount="indefinite"/></circle>
+      <circle cx="210" cy="280" r="8" fill="#4ade80"/>
+    </symbol>
+
+    <symbol id="checks" viewBox="0 0 420 560">
+      <rect x="70" y="130" width="130" height="130" rx="8" fill="url(#d_g)" opacity=".75"><animateTransform attributeName="transform" type="translate" values="0 0;0 -8;0 0" dur="6s" repeatCount="indefinite"/></rect>
+      <rect x="220" y="130" width="130" height="130" rx="8" fill="#4ade80" opacity=".42"><animateTransform attributeName="transform" type="translate" values="0 0;0 8;0 0" dur="7s" repeatCount="indefinite"/></rect>
+      <rect x="70" y="300" width="130" height="130" rx="8" fill="#fbbf24" opacity=".38"><animateTransform attributeName="transform" type="translate" values="0 0;0 8;0 0" dur="6.5s" repeatCount="indefinite"/></rect>
+      <rect x="220" y="300" width="130" height="130" rx="8" fill="url(#s_g)" opacity=".6"><animateTransform attributeName="transform" type="translate" values="0 0;0 -8;0 0" dur="6s" repeatCount="indefinite"/></rect>
+      <path d="M115 195 l16 16 l30 -34" stroke="#fbbf24" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M265 195 l16 16 l30 -34" stroke="#4ade80" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M115 365 l16 16 l30 -34" stroke="#4ade80" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M265 365 l16 16 l30 -34" stroke="#fbbf24" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+
+    <symbol id="sunburst" viewBox="0 0 420 560">
+      <g fill="#4ade80"><animateTransform attributeName="transform" type="rotate" from="0 210 280" to="360 210 280" dur="54s" repeatCount="indefinite"/>
+        <path d="M210 280 L210 90 A190 190 0 0 1 305 116 Z" opacity=".55"/>
+        <path d="M210 280 L305 116 A190 190 0 0 1 381 211 Z" opacity=".32"/>
+        <path d="M210 280 L381 211 A190 190 0 0 1 381 349 Z" opacity=".5"/>
+        <path d="M210 280 L381 349 A190 190 0 0 1 305 444 Z" opacity=".3"/>
+        <path d="M210 280 L305 444 A190 190 0 0 1 210 470 Z" opacity=".5"/>
+        <path d="M210 280 L210 470 A190 190 0 0 1 115 444 Z" opacity=".3"/>
+        <path d="M210 280 L115 444 A190 190 0 0 1 39 349 Z" opacity=".5"/>
+        <path d="M210 280 L39 349 A190 190 0 0 1 39 211 Z" opacity=".3"/>
+        <path d="M210 280 L39 211 A190 190 0 0 1 115 116 Z" opacity=".5"/>
+        <path d="M210 280 L115 116 A190 190 0 0 1 210 90 Z" opacity=".34"/>
+      </g>
+      <circle cx="210" cy="280" r="34" fill="#080a0c"/>
+      <circle cx="210" cy="280" r="14" fill="#fbbf24"><animate attributeName="r" values="14;20;14" dur="3s" repeatCount="indefinite"/></circle>
+    </symbol>
+
+    <symbol id="pulse" viewBox="0 0 420 560">
+      <circle cx="210" cy="280" r="170" fill="url(#d_g)" opacity=".12"><animateTransform attributeName="transform" type="rotate" from="0 210 280" to="360 210 280" dur="50s" repeatCount="indefinite"/></circle>
+      <circle cx="210" cy="280" r="30" fill="none" stroke="#4ade80" stroke-width="3" opacity=".6"><animate attributeName="r" values="30;180;30" dur="5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="5s" repeatCount="indefinite"/></circle>
+      <circle cx="210" cy="280" r="30" fill="none" stroke="#fbbf24" stroke-width="3" opacity=".6"><animate attributeName="r" values="30;180;30" dur="5s" begin="2.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="5s" begin="2.5s" repeatCount="indefinite"/></circle>
+      <circle cx="210" cy="280" r="14" fill="#4ade80"><animate attributeName="opacity" values="1;.6;1" dur="2.4s" repeatCount="indefinite"/></circle>
+    </symbol>
+
+    <symbol id="network" viewBox="0 0 420 560">
+      <g stroke="#4ade80" stroke-width="1.5" opacity=".4">
+        <line x1="210" y1="90" x2="330" y2="200"/><line x1="210" y1="90" x2="90" y2="200"/>
+        <line x1="330" y1="200" x2="300" y2="380"/><line x1="90" y1="200" x2="120" y2="380"/>
+        <line x1="300" y1="380" x2="210" y2="470"/><line x1="120" y1="380" x2="210" y2="470"/>
+        <line x1="90" y1="200" x2="330" y2="200"/>
+      </g>
+      <circle cx="210" cy="90" r="13" fill="#fbbf24"/>
+      <circle cx="330" cy="200" r="10" fill="url(#d_g)"/>
+      <circle cx="90" cy="200" r="10" fill="#4ade80"/>
+      <circle cx="300" cy="380" r="9" fill="#4ade80" opacity=".7"/>
+      <circle cx="120" cy="380" r="9" fill="url(#d_g)"/>
+      <circle cx="210" cy="470" r="12" fill="#4ade80"/>
+      <circle r="6" fill="#fbbf24"><animateMotion dur="6s" repeatCount="indefinite" path="M210 90 L330 200 L300 380 L210 470 L120 380 L90 200 Z"/></circle>
+    </symbol>
+
+    <symbol id="concentric" viewBox="0 0 420 560">
+      <rect x="40" y="110" width="340" height="340" rx="8" fill="url(#d_g)" opacity=".2"><animateTransform attributeName="transform" type="rotate" from="0 210 280" to="360 210 280" dur="34s" repeatCount="indefinite"/></rect>
+      <rect x="90" y="160" width="240" height="240" rx="8" fill="#4ade80" opacity=".18"><animateTransform attributeName="transform" type="rotate" from="0 210 280" to="-360 210 280" dur="24s" repeatCount="indefinite"/></rect>
+      <rect x="135" y="205" width="150" height="150" rx="6" fill="url(#s_a)" opacity=".4"><animateTransform attributeName="transform" type="rotate" from="0 210 280" to="360 210 280" dur="16s" repeatCount="indefinite"/></rect>
+      <circle cx="210" cy="280" r="13" fill="#fbbf24"><animate attributeName="opacity" values="1;.6;1" dur="2.4s" repeatCount="indefinite"/></circle>
+    </symbol>
+
+    <symbol id="slabs" viewBox="0 0 420 560">
+      <rect x="90" y="330" width="250" height="66" rx="8" fill="url(#h_g)" opacity=".4"><animateTransform attributeName="transform" type="translate" values="0 0;0 8;0 0" dur="6s" repeatCount="indefinite"/></rect>
+      <rect x="70" y="250" width="250" height="66" rx="8" fill="url(#d_g)" opacity=".72"><animateTransform attributeName="transform" type="translate" values="0 0;0 -6;0 0" dur="5.2s" repeatCount="indefinite"/></rect>
+      <rect x="90" y="170" width="250" height="66" rx="8" fill="#4ade80" opacity=".45"><animateTransform attributeName="transform" type="translate" values="0 0;0 6;0 0" dur="6.6s" repeatCount="indefinite"/></rect>
+      <rect x="170" y="100" width="62" height="62" rx="6" fill="url(#s_a)" opacity=".7"><animateTransform attributeName="transform" type="rotate" from="0 201 131" to="360 201 131" dur="16s" repeatCount="indefinite"/></rect>
+    </symbol>
+
+    <symbol id="shield" viewBox="0 0 420 560">
+      <polygon points="210,90 350,155 350,300 210,470 70,300 70,155" fill="url(#d_g)" opacity=".35"><animateTransform attributeName="transform" type="translate" values="0 0;0 -9;0 0" dur="7s" repeatCount="indefinite"/></polygon>
+      <polygon points="210,135 312,182 312,295 210,420 108,295 108,182" fill="#4ade80" opacity=".14"><animateTransform attributeName="transform" type="translate" values="0 0;0 -9;0 0" dur="7s" repeatCount="indefinite"/></polygon>
+      <circle cx="210" cy="258" r="44" fill="none" stroke="#fbbf24" stroke-width="2.5" opacity=".35"><animate attributeName="r" values="44;58;44" dur="3.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".35;0;.35" dur="3.2s" repeatCount="indefinite"/></circle>
+      <circle cx="210" cy="252" r="15" fill="#fbbf24"/>
+      <rect x="203" y="262" width="14" height="40" rx="6" fill="#080a0c"/>
+    </symbol>
+
+    <symbol id="funnel" viewBox="0 0 420 560">
+      <rect x="50" y="70" width="60" height="60" rx="6" fill="url(#d_g)" opacity=".7"><animateTransform attributeName="transform" type="translate" values="0 0;0 -7;0 0" dur="6s" repeatCount="indefinite"/></rect>
+      <rect x="310" y="80" width="60" height="60" rx="6" fill="url(#s_a)" opacity=".6"/>
+      <rect x="40" y="230" width="54" height="54" rx="6" fill="#4ade80" opacity=".5"/>
+      <rect x="330" y="240" width="54" height="54" rx="6" fill="url(#d_g)" opacity=".7"/>
+      <rect x="80" y="380" width="58" height="58" rx="6" fill="#fbbf24" opacity=".5"/>
+      <rect x="300" y="380" width="58" height="58" rx="6" fill="#4ade80" opacity=".5"/>
+      <circle cx="210" cy="280" r="60" fill="url(#d_g)" opacity=".3"><animateTransform attributeName="transform" type="rotate" from="0 210 280" to="360 210 280" dur="40s" repeatCount="indefinite"/></circle>
+      <circle cx="210" cy="280" r="14" fill="#fbbf24"><animate attributeName="opacity" values="1;.6;1" dur="2.5s" repeatCount="indefinite"/></circle>
+    </symbol>
+
+    <symbol id="stairs" viewBox="0 0 420 560">
+      <rect x="40" y="380" width="110" height="90" rx="6" fill="#4ade80" opacity=".4"><animateTransform attributeName="transform" type="translate" values="0 0;0 7;0 0" dur="6s" repeatCount="indefinite"/></rect>
+      <rect x="120" y="290" width="110" height="90" rx="6" fill="url(#d_g)" opacity=".75"><animateTransform attributeName="transform" type="translate" values="0 0;0 -5;0 0" dur="5s" repeatCount="indefinite"/></rect>
+      <rect x="200" y="200" width="110" height="90" rx="6" fill="url(#s_a)" opacity=".65"><animateTransform attributeName="transform" type="translate" values="0 0;0 5;0 0" dur="7s" repeatCount="indefinite"/></rect>
+      <rect x="280" y="110" width="110" height="90" rx="6" fill="#fbbf24" opacity=".5"><animateTransform attributeName="transform" type="translate" values="0 0;0 -7;0 0" dur="5.5s" repeatCount="indefinite"/></rect>
+      <polygon points="335,60 390,110 280,110" fill="#4ade80" opacity=".5"/>
+    </symbol>
+
+    <symbol id="spiral" viewBox="0 0 420 560">
+      <g><animateTransform attributeName="transform" type="rotate" from="0 210 280" to="360 210 280" dur="44s" repeatCount="indefinite"/>
+        <path d="M210 280 q40 0 40 40 q0 60 -70 60 q-90 0 -90 -100 q0 -120 130 -120 q170 0 170 190" fill="none" stroke="#4ade80" stroke-width="3" opacity=".5"/>
+      </g>
+      <circle cx="210" cy="280" r="12" fill="#fbbf24"/>
+      <circle cx="290" cy="120" r="9" fill="url(#d_g)"/>
+    </symbol>
+
+    <symbol id="rings" viewBox="0 0 420 560">
+      <circle cx="210" cy="280" r="180" fill="url(#d_g)" opacity=".16"><animateTransform attributeName="transform" type="rotate" from="0 210 280" to="360 210 280" dur="60s" repeatCount="indefinite"/></circle>
+      <circle cx="210" cy="280" r="120" fill="url(#s_a)" opacity=".3"><animateTransform attributeName="transform" type="rotate" from="0 210 280" to="-360 210 280" dur="34s" repeatCount="indefinite"/></circle>
+      <circle cx="210" cy="280" r="62" fill="#4ade80" opacity=".25"><animateTransform attributeName="transform" type="rotate" from="0 210 280" to="360 210 280" dur="22s" repeatCount="indefinite"/></circle>
+      <circle cx="210" cy="280" r="14" fill="#fbbf24"/>
+    </symbol>
+
+    <symbol id="interlock" viewBox="0 0 420 560">
+      <rect x="70" y="150" width="200" height="200" rx="10" fill="url(#d_g)" opacity=".35"><animateTransform attributeName="transform" type="rotate" values="-6 170 250;6 170 250;-6 170 250" dur="11s" repeatCount="indefinite"/></rect>
+      <rect x="150" y="220" width="200" height="200" rx="10" fill="url(#s_a)" opacity=".4"><animateTransform attributeName="transform" type="rotate" values="6 250 320;-6 250 320;6 250 320" dur="11s" repeatCount="indefinite"/></rect>
+      <circle cx="210" cy="285" r="14" fill="#fbbf24"/>
+    </symbol>
+
+    <symbol id="playring" viewBox="0 0 420 560">
+      <circle cx="210" cy="280" r="160" fill="url(#d_g)" opacity=".16"><animateTransform attributeName="transform" type="rotate" from="0 210 280" to="360 210 280" dur="45s" repeatCount="indefinite"/></circle>
+      <circle cx="210" cy="280" r="112" fill="none" stroke="#4ade80" stroke-width="3" opacity=".3"><animate attributeName="r" values="112;126;112" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values=".3;.05;.3" dur="3s" repeatCount="indefinite"/></circle>
+      <polygon points="178,200 178,360 312,280" fill="#fbbf24" opacity=".8"><animate attributeName="opacity" values=".8;1;.8" dur="2.4s" repeatCount="indefinite"/></polygon>
+    </symbol>
+
+    <symbol id="arrow" viewBox="0 0 420 560">
+      <polygon points="210,70 330,210 262,210 262,470 158,470 158,210 90,210" fill="url(#d_g)" opacity=".4"><animateTransform attributeName="transform" type="translate" values="0 0;0 -16;0 0" dur="4.5s" repeatCount="indefinite"/></polygon>
+      <polygon points="210,130 286,220 244,220 244,400 176,400 176,220 134,220" fill="url(#s_a)" opacity=".55"><animateTransform attributeName="transform" type="translate" values="0 0;0 -16;0 0" dur="4.5s" repeatCount="indefinite"/></polygon>
+      <circle cx="210" cy="280" r="12" fill="#fbbf24"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="progress" id="progress"></div>
+<div class="brand">AI Mindset × Иванов</div>
+<div class="hint">← → навигация · N заметки · F фуллскрин</div>
+<div class="counter" id="counter">01 / 21</div>
+<div class="dots" id="dots"></div>
+<div class="deck" id="deck">
+
+<!-- 1 TITLE — orbital -->
+<section class="slide" data-notes="Открываем спринт. Коротко: что за формат, кто мы, почему делаем вместе. Тон — совместное исследование, не курс из пяти лекций.">
+  <div class="art" aria-hidden="true"><svg viewBox="0 0 420 560"><use href="#orbital"/></svg></div>
+  <div class="kicker">Сессия 1 · 1 июня 2026</div>
+  <h1>deep self<br>development<br><span class="g">w/ ai</span></h1>
+  <div class="meta"><b>AI Mindset</b> <span class="sep">×</span> <b>Алексей Иванов</b><br>1–14 июня · 2 недели · online</div>
+</section>
+
+<!-- 2 HOSTS — converge -->
+<section class="slide" data-notes="Кратко о нас. Иванов — методология и внутренний мир. Поваляев — архитектура и стек. Вместе: метод без архитектуры не масштабируется.">
+  <div class="art mir" aria-hidden="true"><svg viewBox="0 0 420 560"><use href="#converge"/></svg></div>
+  <div class="kicker">Кто мы</div>
+  <div class="hosts">
+    <div class="host-block">
+      <div class="host-name">Алексей Иванов</div>
+      <div class="host-role">методология · разговор · практика</div>
+      <div class="host-facts">
+        <div class="host-fact"><b>executive coach</b> · ICF PCC · 1500+ часов</div>
+        <div class="host-fact">IFS Institute · Hogan · вертикальное развитие</div>
+        <div class="host-fact">@ponchiknews · 16K+ · клиенты Google / Meta / McKinsey</div>
+      </div>
+      <div class="host-signal">«Развитие происходит между разговорами — в 23 днях, где ничего не выглядит как практика. AI может видеть эту дорогу»</div>
+    </div>
+    <div class="host-block">
+      <div class="host-name">Александр Поваляев</div>
+      <div class="host-role">архитектура · контекст · инструменты</div>
+      <div class="host-facts">
+        <div class="host-fact"><b>founder AI Mindset</b> · 12 лет в продукте</div>
+        <div class="host-fact">Personal OS с 2023 · vault, skills, agents</div>
+        <div class="host-fact">1000+ alumni · 23 страны · labs: POS / AI Native / Self-Dev</div>
+      </div>
+      <div class="host-signal">«AI как экзоскелет мышления, не подмена»</div>
+    </div>
+  </div>
+</section>
+
+<!-- == DIVIDER 1 — rings == -->
+<section class="slide" data-notes="Первый блок: что такое deep self development, общий словарь и дуга двух недель.">
+  <div class="art" aria-hidden="true"><svg viewBox="0 0 420 560"><use href="#rings"/></svg></div>
+  <div class="sec-num">Блок 1</div>
+  <div class="sec-title">О чём этот <span class="g2">спринт</span></div>
+  <div class="sec-sub">Что такое deep self development, общий язык и дуга двух недель</div>
+</section>
+
+<!-- 3 WHAT — path -->
+<section class="slide" data-notes="Глубокое саморазвитие — не тренинги, а месяцы и годы. AI не заменяет психологическую работу, а даёт ей память, форму и ритм.">
+  <div class="art" aria-hidden="true"><svg viewBox="0 0 420 560"><use href="#path"/></svg></div>
+  <div class="kicker">Что такое deep self development</div>
+  <h2>Включение AI во все <span class="g">процессы роста</span></h2>
+  <div class="route">
+    <div class="route-step hi">self-development</div><div class="route-arr">→</div>
+    <div class="route-step">личный контекст</div><div class="route-arr">→</div>
+    <div class="route-step">важный разговор</div><div class="route-arr">→</div>
+    <div class="route-step">debrief</div><div class="route-arr">→</div>
+    <div class="route-step hi">результат</div>
+  </div>
+  <ul>
+    <li>Не поверхностные тренинги — это <b>месяцы и годы</b>: ценности, планы, ассессменты, мечты</li>
+    <li>AI не заменяет психологическую работу — <b>даёт ей память, форму и ритм</b></li>
+    <li>Три слоя: <b>понять → спланировать → действовать</b></li>
+  </ul>
+</section>
+
+<!-- 4 GLOSSARY — grid -->
+<section class="slide" data-notes="Короткий общий словарь, чтобы дальше говорить на одном языке. Не заучивать — просто чтобы термины не пугали.">
+  <div class="art" aria-hidden="true"><svg viewBox="0 0 420 560"><use href="#grid"/></svg></div>
+  <div class="kicker">Общий язык</div>
+  <h2>Шесть слов, которыми будем <span class="g">пользоваться</span></h2>
+  <div class="cards g3">
+    <div class="card"><div class="ct">about-me</div><div class="cd">Файл с фактами о вас: ценности, методы, паттерны. AI читает первым</div></div>
+    <div class="card"><div class="ct">vault</div><div class="cd">Хранилище личного контекста — папки с заметками</div></div>
+    <div class="card"><div class="ct">skill.md</div><div class="cd">Инструкция-навык: повторяемый сценарий по запросу</div></div>
+    <div class="card"><div class="ct">agent</div><div class="cd">Мини-процесс сам: смотрит на данные → делает действие</div></div>
+    <div class="card"><div class="ct">debrief</div><div class="cd">Разбор после разговора: что было, что всплыло, шаг</div></div>
+    <div class="card"><div class="ct">parts · IFS</div><div class="cd">Субличности. AI замечает, какая часть активна</div></div>
+  </div>
+</section>
+
+<!-- 5 ARC — arc -->
+<section class="slide" data-notes="Одним кадром — куда идём. Неделя 1 — понять себя и собрать контекст. Неделя 2 — действовать. Контекст первой недели — топливо для второй.">
+  <div class="art" aria-hidden="true"><svg viewBox="0 0 420 560"><use href="#arc"/></svg></div>
+  <div class="kicker">Дуга спринта</div>
+  <h2>Две недели · <span class="g">от контекста к действию</span></h2>
+  <div class="arc">
+    <div class="arc-col w1">
+      <div class="arc-week">Неделя 1 · 1–7 июня</div>
+      <div class="arc-theme">Понять себя</div>
+      <ul><li>Личный контекст и about-me</li><li>IFS-части и decision rails</li><li>Разбор контура на office hours</li></ul>
+    </div>
+    <div class="arc-col w2">
+      <div class="arc-week">Неделя 2 · 8–14 июня</div>
+      <div class="arc-theme">Действовать</div>
+      <ul><li>Подготовка важного разговора</li><li>Transcript → debrief</li><li>Первый skill.md → demo day</li></ul>
+    </div>
+  </div>
+</section>
+
+<!-- == DIVIDER 2 — interlock == -->
+<section class="slide" data-notes="Второй блок: как устроен спринт по дням, что получите на выходе, правила и ритм.">
+  <div class="art" aria-hidden="true"><svg viewBox="0 0 420 560"><use href="#interlock"/></svg></div>
+  <div class="sec-num">Блок 2</div>
+  <div class="sec-title">Как мы <span class="g2">работаем</span></div>
+  <div class="sec-sub">Устройство по дням, результат на выходе, правила и ритм</div>
+</section>
+
+<!-- 6 CALENDAR — diamond -->
+<section class="slide" data-notes="14 дней: 4 live по 90 минут, 2 async, office hours и demo day. Адаптируемся под группу, записи остаются.">
+  <div class="art" aria-hidden="true"><svg viewBox="0 0 420 560"><use href="#diamond"/></svg></div>
+  <div class="kicker">Как устроен спринт · 14 дней</div>
+  <h2>4 live · office hours · <span class="g">demo day</span></h2>
+  <div class="cal">
+    <div class="cal-day live"><span class="cn">пн</span><span class="cd">1 июн</span><span class="ct">Контекст + сетап</span></div>
+    <div class="cal-day"><span class="cn">вт</span><span class="cd">2 июн</span><span class="ct" style="color:var(--muted)">about-me + parts</span></div>
+    <div class="cal-day live"><span class="cn">чт</span><span class="cd">4 июн</span><span class="ct">IFS + decision rails</span></div>
+    <div class="cal-day oh"><span class="cn">сб</span><span class="cd">6 июн</span><span class="ct">office hours</span></div>
+    <div class="cal-day live"><span class="cn">пн</span><span class="cd">8 июн</span><span class="ct">Conversation prep</span></div>
+    <div class="cal-day"><span class="cn">вт</span><span class="cd">9 июн</span><span class="ct" style="color:var(--muted)">transcript → debrief</span></div>
+    <div class="cal-day live"><span class="cn">чт</span><span class="cd">11 июн</span><span class="ct">skill.md</span></div>
+    <div class="cal-day demo"><span class="cn">сб</span><span class="cd">13 июн</span><span class="ct">demo day</span></div>
+  </div>
+</section>
+
+<!-- 7 OUTCOME — checks -->
+<section class="slide" data-notes="Что будет на руках к концу: четыре рабочих артефакта, не «послушали лекции». Возвращаемся к этому на demo day.">
+  <div class="art" aria-hidden="true"><svg viewBox="0 0 420 560"><use href="#checks"/></svg></div>
+  <div class="kicker">Что вы унесёте</div>
+  <h2>Четыре рабочих <span class="g">артефакта</span></h2>
+  <div class="cards">
+    <div class="card"><div class="ct"><span class="ck">✓</span>about-me vault</div><div class="cd">Контекст, который делает ответы AI вашими</div></div>
+    <div class="card"><div class="ct"><span class="ck">✓</span>1 рабочий агент</div><div class="cd">Бриф или coaching-вопросы из транскриптов</div></div>
+    <div class="card"><div class="ct"><span class="ck">✓</span>свой skill.md</div><div class="cd">Один повторяемый навык под вашу задачу</div></div>
+    <div class="card"><div class="ct"><span class="ck">✓</span>разговор + debrief</div><div class="cd">Важный разговор с AI-подготовкой и разбором</div></div>
+  </div>
+</section>
+
+<!-- 8 RULES — concentric -->
+<section class="slide" data-notes="Правила: лаборатория, не курс. Перебивать нормально. Адаптируемся. Стек вторичен. Записи остаются.">
+  <div class="art mir" aria-hidden="true"><svg viewBox="0 0 420 560"><use href="#concentric"/></svg></div>
+  <div class="kicker">Правила и принципы</div>
+  <h2>Это <span class="g">лаборатория</span>, не курс</h2>
+  <ul>
+    <li><b>Диалоговый формат</b> — перебивать и спрашивать приветствуется</li>
+    <li><b>Адаптируемся</b> под скорость группы — рыба есть, но гнём под вас</li>
+    <li>Стек <b>вторичен</b> <span class="sub">ChatGPT или Claude — не принципиально</span></li>
+    <li><b>Записи остаются</b> у всех</li>
+    <li class="dim">Сок — в совместном исследовании, не в подключённом боте</li>
+  </ul>
+</section>
+
+<!-- 9 COMMITMENT — pulse -->
+<section class="slide" data-notes="Честно про вложения: 2–3 часа в неделю между сессиями. На связи в чате. Отстал — догоняем, записи остаются.">
+  <div class="art" aria-hidden="true"><svg viewBox="0 0 420 560"><use href="#pulse"/></svg></div>
+  <div class="kicker">Сколько вкладывать · где на связи</div>
+  <div class="focus-box">
+    <div class="fb-kicker">Ритм спринта</div>
+    <div class="fb-body">2–3 часа в неделю между сессиями</div>
+    <div class="fb-sub">В основном — сбор контекста и маленькие эксперименты. Не вечерами напролёт.</div>
+  </div>
+  <ul style="margin-top:1.3rem">
+    <li><b>Чат группы</b> — вопросы, находки, кусочки промптов между live</li>
+    <li><b>Office hours · 6 июня</b> — живой разбор вашего контура</li>
+    <li class="dim">Отстал — записи остаются, догоняем в своём темпе</li>
+  </ul>
+</section>
+
+<!-- 10 FOCUS — sunburst -->
+<section class="slide" data-notes="Главная установка на весь спринт. Любопытство и эксперимент — рабочий режим. Инструменты приложатся.">
+  <div class="art" aria-hidden="true"><svg viewBox="0 0 420 560"><use href="#sunburst"/></svg></div>
+  <div class="kicker">Главный фокус</div>
+  <div class="focus-box">
+    <div class="fb-kicker">Установка на 2 недели</div>
+    <div class="fb-body">Любопытство и эксперимент</div>
+    <div class="fb-sub">Не знаем заранее, что сработает именно для вас — пробуем, смотрим, итерируем.</div>
+  </div>
+  <div class="lead" style="margin-top:1.4rem">Ошибка — не провал. Это часть product-learning про себя.</div>
+</section>
+
+<!-- == DIVIDER 3 — playring == -->
+<section class="slide" data-notes="Третий блок: хватит теории — показываем живые демо.">
+  <div class="art" aria-hidden="true"><svg viewBox="0 0 420 560"><use href="#playring"/></svg></div>
+  <div class="sec-num">Блок 3</div>
+  <div class="sec-title">AI в <span class="g2">действии</span></div>
+  <div class="sec-sub">Несколько живых демо: контекст, части, агенты и вопросы в звонке</div>
+</section>
+
+<!-- 11 DEMO — network -->
+<section class="slide" data-notes="Живые демо. Алексей: about-me, IFS-части в памяти, мини-агент. Саша: мультиагентная коммуникация из контекста.">
+  <div class="art" aria-hidden="true"><svg viewBox="0 0 420 560"><use href="#network"/></svg></div>
+  <div class="kicker">Демо</div>
+  <h2>Несколько <span class="g">живых примеров</span></h2>
+  <div class="demo-list">
+    <div class="demo-item"><div class="di-num">01</div><div class="di-body"><div class="di-title">About me → персонализированные ответы</div><div class="di-desc">AI читает кто ты — и ответы становятся другими</div></div></div>
+    <div class="demo-item"><div class="di-num">02</div><div class="di-body"><div class="di-title">IFS субличности в памяти AI</div><div class="di-desc">Части в системных инструкциях; AI замечает активную</div></div></div>
+    <div class="demo-item"><div class="di-num">03</div><div class="di-body"><div class="di-title">Мини-агент: ежедневный бриф</div><div class="di-desc">Смотрит транскрипты → одна ценность + вопрос в Telegram</div></div></div>
+    <div class="demo-item"><div class="di-num">04</div><div class="di-body"><div class="di-title">Granola → coaching questions</div><div class="di-desc">Вопросы прямо в звонке — или какая часть говорит</div></div></div>
+  </div>
+</section>
+
+<!-- == DIVIDER 4 — arrow == -->
+<section class="slide" data-notes="Последний блок: теперь действуете вы — практика, сетап, приватность, источники и домашка.">
+  <div class="art" aria-hidden="true"><svg viewBox="0 0 420 560"><use href="#arrow"/></svg></div>
+  <div class="sec-num">Блок 4</div>
+  <div class="sec-title">Ваш <span class="g2">ход</span></div>
+  <div class="sec-sub">Практика сейчас, сетап, приватность, источники контекста и домашка</div>
+</section>
+
+<!-- 12 PRACTICE — funnel -->
+<section class="slide" data-notes="Практика. Каждый заполняет карточку (10 мин, группы 3–4). Пока знакомятся — выгружаю PDF, Claude ранжирует топ-запросы группы.">
+  <div class="art" aria-hidden="true"><svg viewBox="0 0 420 560"><use href="#funnel"/></svg></div>
+  <div class="kicker">Практика · сейчас</div>
+  <h2>Собираем ваш <span class="g">контекст</span></h2>
+  <ul>
+    <li><b>10 минут</b> — каждый заполняет карточку на доске</li>
+    <li>Потом по <b>3–4 человека</b>: знакомимся, рассказываем</li>
+  </ul>
+  <ul style="margin-top:.8rem;margin-left:1.2rem">
+    <li>Коротко обо мне и зачем я здесь</li>
+    <li>Какие фреймворки уже использовал <span class="sub">Hogan, терапия, Эннеаграмма…</span></li>
+    <li>Что уже делаю с AI — в работе или для себя</li>
+    <li>Есть ли план развития? Работаю ли с другими?</li>
+  </ul>
+</section>
+
+<!-- 13 SETUP — slabs -->
+<section class="slide" data-notes="Что иметь под рукой к четвергу. Главное — AI с доступом к файлам и место для vault. Granola/Telegram можно позже.">
+  <div class="art mir" aria-hidden="true"><svg viewBox="0 0 420 560"><use href="#slabs"/></svg></div>
+  <div class="kicker">Технический сетап · к 4 июня</div>
+  <h2>Что понадобится <span class="g">под рукой</span></h2>
+  <div class="cards">
+    <div class="card"><div class="ct">Claude или ChatGPT</div><div class="cd">Платный план — доступ к файлам и памяти</div><div class="tag">обязательно</div></div>
+    <div class="card"><div class="ct">Obsidian + vault</div><div class="cd">Локальное хранилище заметок и контекста</div><div class="tag">обязательно</div></div>
+    <div class="card"><div class="ct">Granola</div><div class="cd">Записывает звонки → transcript → debrief</div><div class="tag opt">по желанию</div></div>
+    <div class="card"><div class="ct">Telegram</div><div class="cd">Для агентов-уведомлений и чата поддержки</div><div class="tag opt">по желанию</div></div>
+  </div>
+</section>
+
+<!-- 14 PRIVACY — shield -->
+<section class="slide" data-notes="Важный слайд — будете грузить личное. Правило: вы контролируете, что отдаёте. Чувствительное — осознанно, можно обезличить.">
+  <div class="art" aria-hidden="true"><svg viewBox="0 0 420 560"><use href="#shield"/></svg></div>
+  <div class="kicker">Приватность и данные</div>
+  <h2>Вы <span class="g">контролируете</span>, что отдаёте</h2>
+  <div class="focus-box">
+    <div class="fb-kicker">Базовое правило</div>
+    <div class="fb-body" style="font-size:clamp(1.05rem,1.7vw,1.4rem)">Локальный vault — у вас. В облако уходит только то, что вы сами отправили в запросе</div>
+  </div>
+  <ul style="margin-top:1.2rem">
+    <li>Начните с неличного контекста — освойтесь, потом глубже</li>
+    <li class="warn">Терапия, здоровье, третьи лица — осознанно, можно обезличить</li>
+    <li class="dim">Сомневаетесь — не грузите. Спросите в чате</li>
+  </ul>
+</section>
+
+<!-- 15 SOURCES — spiral -->
+<section class="slide" data-notes="Частый вопрос — откуда брать контекст. Он уже есть, просто разбросан. Не собирайте всё — выберите один источник.">
+  <div class="art mir" aria-hidden="true"><svg viewBox="0 0 420 560"><use href="#spiral"/></svg></div>
+  <div class="kicker">Откуда брать контекст</div>
+  <h2>Он уже есть — просто <span class="g">разбросан</span></h2>
+  <div class="src">
+    <div class="src-item"><div class="si-t">Telegram себе</div><div class="si-d">Избранное, заметки, голосовые</div></div>
+    <div class="src-item"><div class="si-t">Тесты</div><div class="si-d">Hogan, MBTI, Эннеаграмма, 360</div></div>
+    <div class="src-item"><div class="si-t">Заметки терапии</div><div class="si-d">Сессии, инсайты (осознанно)</div></div>
+    <div class="src-item"><div class="si-t">Дневники</div><div class="si-d">Notes, Obsidian, бумажные</div></div>
+    <div class="src-item"><div class="si-t">Транскрипты</div><div class="si-d">Granola, Fathom, Zoom</div></div>
+    <div class="src-item"><div class="si-t">Свои тексты</div><div class="si-d">Посты, блог, сообщения</div></div>
+    <div class="src-item"><div class="si-t">Рабочие доки</div><div class="si-d">Резюме, reviews, OKR</div></div>
+    <div class="src-item"><div class="si-t">Цели и планы</div><div class="si-d">План развития, мечты</div></div>
+    <div class="src-item"><div class="si-t">Диалог с AI</div><div class="si-d">10 мин интервью</div></div>
+  </div>
+  <div class="lead" style="margin-top:1rem">Выберите <b style="color:#fff">один</b> источник, с которого проще начать.</div>
+</section>
+
+<!-- 16 HOMEWORK — stairs -->
+<section class="slide" data-notes="Домашка до четверга. Начать about-me и собрать один источник контекста в vault. Бонус — сравнить ответ AI с about-me и без.">
+  <div class="art" aria-hidden="true"><svg viewBox="0 0 420 560"><use href="#stairs"/></svg></div>
+  <div class="kicker">Домашнее задание · до четверга</div>
+  <h2>Два шага <span class="g">до следующего live</span></h2>
+  <div class="hw-box">
+    <div class="hw-label">Задачи на 4 июня</div>
+    <div class="hw-task"><div class="hk">01</div><div class="hv"><b>Начать about-me файл</b><br><span>Кто вы, что повторяется, ценности, близкие методы. ~3 поста Telegram (≈12К символов)</span></div></div>
+    <div class="hw-task"><div class="hk">02</div><div class="hv"><b>Один источник контекста → в Vault</b><br><span>Telegram-экспорт, записки, тест, заметки терапии. Один источник, не всё сразу</span></div></div>
+    <div class="hw-task"><div class="hk">★</div><div class="hv"><b>Бонус:</b> задать Claude вопрос с about-me — сравнить с обычным ответом</div></div>
+  </div>
+</section>
+
+<!-- 17 QA — orbital -->
+<section class="slide" data-notes="Q&A. Открытые вопросы — по домашке, стеку, формату. Следующий live — четверг 4 июня.">
+  <div class="art mir" aria-hidden="true"><svg viewBox="0 0 420 560"><use href="#orbital"/></svg></div>
+  <div class="kicker">В конце каждой сессии</div>
+  <div class="qa-big">Q&amp;A</div>
+  <h2 style="margin-bottom:1rem">Вопросы?</h2>
+  <ul>
+    <li>Что непонятно по домашнему заданию</li>
+    <li>Вопросы по стеку и инструментам</li>
+    <li>Что разобрать глубже дальше</li>
+  </ul>
+  <div class="meta" style="margin-top:1.6rem"><b>Следующий live:</b> чт 4 июня · IFS + decision rails<br><b>Office hours:</b> сб 6 июня</div>
+</section>
+
+</div>
+<div class="notes" id="notes"><h4>Спикерские заметки</h4><p id="notes-body"></p></div>
+<script>
+  const slides=Array.from(document.querySelectorAll('.slide'));
+  const total=slides.length;
+  let i=0;
+  const prog=document.getElementById('progress');
+  const counter=document.getElementById('counter');
+  const notes=document.getElementById('notes');
+  const notesBody=document.getElementById('notes-body');
+  const dotsWrap=document.getElementById('dots');
+  slides.forEach((_,idx)=>{const b=document.createElement('button');b.addEventListener('click',()=>go(idx));dotsWrap.appendChild(b)});
+  const dots=Array.from(dotsWrap.children);
+  function pad(n){return String(n).padStart(2,'0')}
+  function render(){
+    slides.forEach((s,idx)=>s.classList.toggle('active',idx===i));
+    prog.style.width=((i+1)/total*100)+'%';
+    counter.textContent=pad(i+1)+' / '+pad(total);
+    dots.forEach((d,idx)=>d.classList.toggle('on',idx===i));
+    notesBody.textContent=slides[i].dataset.notes||'';
+  }
+  function go(n){i=Math.max(0,Math.min(total-1,n));render()}
+  function next(){go(i+1)}function prev(){go(i-1)}
+  document.addEventListener('keydown',e=>{
+    switch(e.key){
+      case 'ArrowRight':case ' ':case 'PageDown':e.preventDefault();next();break;
+      case 'ArrowLeft':case 'PageUp':e.preventDefault();prev();break;
+      case 'Home':go(0);break;case 'End':go(total-1);break;
+      case 'n':case 'N':case 'ш':case 'Ш':notes.classList.toggle('show');break;
+      case 'f':case 'F':case 'а':case 'А':document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();break;
+      default:if(e.key>='1'&&e.key<='9')go(parseInt(e.key)-1);
+    }
+  });
+  let tx=null;
+  document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX});
+  document.addEventListener('touchend',e=>{if(tx===null)return;const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50){dx<0?next():prev()}tx=null});
+  document.getElementById('deck').addEventListener('click',e=>{if(e.target.closest('button'))return;e.clientX>window.innerWidth*.5?next():prev()});
+  render();
+</script>
+</body>
+</html>
