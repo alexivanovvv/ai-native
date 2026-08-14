@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Native — памятка участника</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:#231e14; --mut:#948a72; --line:#e2d7bf; --acc:#2f6f4f; --acc2:#b8752e; --bg:#f6f1e6; --soft:#efe7d5;
+    --card:#faf6ee; --line-strong:#cdbd97; --txt2:#3f392c; --txt3:#5c5646; --bar-track:#e2d7bf; --bar-mut:rgba(35,30,20,.22);
+    /* палитра принципов — как на слайдах курса, затемнённая под бежевую бумагу */
+    --c1:#8f6b00; --c2:#bf4a2b; --c3:#3a7d3f; --c4:#a63f8f; --c5:#22699c; --c6:#9a7500;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink:#f1f0e9; --mut:#8f8e88; --line:rgba(255,255,255,.09); --acc:#6fc79a; --acc2:#e8a855; --bg:#0a0b0c; --soft:rgba(255,255,255,.045);
+      --card:rgba(255,255,255,.03); --line-strong:rgba(255,255,255,.22); --txt2:#d2d1ca; --txt3:#a9a8a1; --bar-track:rgba(255,255,255,.09); --bar-mut:rgba(255,255,255,.26);
+      --c1:#f2e06a; --c2:#ff8f73; --c3:#a5e08a; --c4:#f08ae0; --c5:#6fc3f0; --c6:#ffd84d;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink:#f1f0e9; --mut:#8f8e88; --line:rgba(255,255,255,.09); --acc:#6fc79a; --acc2:#e8a855; --bg:#0a0b0c; --soft:rgba(255,255,255,.045);
+    --card:rgba(255,255,255,.03); --line-strong:rgba(255,255,255,.22); --txt2:#d2d1ca; --txt3:#a9a8a1; --bar-track:rgba(255,255,255,.09); --bar-mut:rgba(255,255,255,.26);
+    --c1:#f2e06a; --c2:#ff8f73; --c3:#a5e08a; --c4:#f08ae0; --c5:#6fc3f0; --c6:#ffd84d;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index:40; opacity:.4;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.47 0 0 0 0 0.4 0 0 0 0.025 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  body { background:var(--bg); color:var(--ink); font:18px/1.65 "Golos Text", -apple-system, "SF Pro Text", Helvetica, sans-serif;
+         max-width:900px; margin:0 auto; padding:88px 36px 110px; transition:background .2s, color .2s; }
+  .theme { position:absolute; top:24px; right:24px; display:flex; gap:2px; border:1px solid var(--line); border-radius:8px; padding:2px; }
+  .theme button { border:none; background:none; color:var(--mut); font:13px "Golos Text", -apple-system, sans-serif; padding:5px 11px; border-radius:6px; cursor:pointer; }
+  .theme button.on { background:var(--soft); color:var(--ink); }
+
+  .brand { display:flex; align-items:center; gap:20px; }
+  .brand .logo { width:68px; height:68px; flex-shrink:0; }
+  h1 { font-family:"Fraunces", "Golos Text", serif; font-size:44px; font-weight:600; letter-spacing:-.01em; line-height:1.12; }
+  h1::after { content:"."; color:var(--acc2); }
+  h1 em { font-style:normal; color:var(--c6); }
+  .sub { color:var(--mut); margin-top:8px; font-size:16px; }
+  .meta { display:flex; flex-wrap:wrap; gap:8px; margin-top:22px; }
+  .chip { font-size:14px; color:var(--txt3); border:1px solid var(--line); border-radius:8px; padding:6px 13px; background:var(--soft); }
+  .chip b { font-weight:600; color:var(--ink); }
+
+  html { scroll-behavior:smooth; }
+  .toc { margin-top:44px; border:1px solid var(--line); border-radius:12px; background:var(--card); padding:22px 26px 18px; }
+  .toc .toc-title { font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:.11em; color:var(--mut); margin-bottom:12px; }
+  .toc ol { list-style:none; columns:2; column-gap:36px; }
+  .toc li { break-inside:avoid; }
+  .toc a { display:flex; align-items:baseline; gap:12px; color:var(--txt2); text-decoration:none; font-size:15.5px; line-height:1.45; padding:6px 0; }
+  .toc a .idx { font-family:"Fraunces", serif; font-size:13px; font-weight:600; flex-shrink:0; font-variant-numeric:tabular-nums; }
+  .toc li:nth-child(1) .idx { color:var(--c1); } .toc li:nth-child(2) .idx { color:var(--c2); }
+  .toc li:nth-child(3) .idx { color:var(--c3); } .toc li:nth-child(4) .idx { color:var(--c4); }
+  .toc li:nth-child(5) .idx { color:var(--c5); } .toc li:nth-child(6) .idx { color:var(--c6); }
+  .toc li:nth-child(7) .idx { color:var(--c2); }
+  .toc a:hover { color:var(--ink); }
+  @media (max-width:640px){ .toc ol { columns:1; } }
+
+  section { margin-top:88px; scroll-margin-top:28px; }
+  .sec-head { display:flex; align-items:baseline; gap:14px; border-bottom:1px solid var(--line); padding-bottom:12px; margin-bottom:30px; }
+  .sec-head .idx { font-family:"Fraunces", serif; font-size:17px; color:var(--acc2); font-weight:600; letter-spacing:.02em; }
+  #s01 .sec-head .idx { color:var(--c1); } #s02 .sec-head .idx { color:var(--c2); }
+  #s03 .sec-head .idx { color:var(--c3); } #s04 .sec-head .idx { color:var(--c4); }
+  #s05 .sec-head .idx { color:var(--c5); } #s06 .sec-head .idx { color:var(--c6); }
+  #s07 .sec-head .idx { color:var(--c2); }
+  .sec-head h2 { font-size:14px; font-weight:600; text-transform:uppercase; letter-spacing:.11em; color:var(--mut); }
+  .note { margin-top:18px; font-size:14.5px; color:var(--txt3); line-height:1.6; max-width:640px; }
+  .intro { font-size:17.5px; color:var(--txt2); line-height:1.7; max-width:780px; }
+  .intro b { color:var(--ink); }
+
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .cards.cols3 { grid-template-columns:1fr 1fr 1fr; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:26px 28px 24px; transition:border-color .25s; }
+  .card:hover { border-color:var(--line-strong); }
+  .card .n { font-family:"Fraunces", serif; font-size:15px; font-weight:600; color:var(--acc2); margin-bottom:10px; }
+  .card .ttl { font-size:17px; font-weight:600; line-height:1.35; }
+  .card .ttl.caps { font-size:14.5px; text-transform:uppercase; letter-spacing:.07em; font-weight:700; }
+  .card p { color:var(--txt2); font-size:15.5px; line-height:1.6; margin-top:12px; }
+  .card ul { list-style:none; margin-top:12px; }
+  .card ul li { font-size:15px; color:var(--txt2); line-height:1.5; padding:5px 0 5px 17px; position:relative; }
+  .card ul li::before { content:""; position:absolute; left:0; top:12px; width:6px; height:6px; border-radius:50%; background:var(--acc); }
+  .card.p1 .n, .card.p1 .ttl.caps { color:var(--c1); } .card.p1 ul li::before { background:var(--c1); }
+  .card.p2 .n, .card.p2 .ttl.caps { color:var(--c2); } .card.p2 ul li::before { background:var(--c2); }
+  .card.p3 .n, .card.p3 .ttl.caps { color:var(--c3); } .card.p3 ul li::before { background:var(--c3); }
+  .card.p4 .n, .card.p4 .ttl.caps { color:var(--c4); } .card.p4 ul li::before { background:var(--c4); }
+  .card.p5 .n, .card.p5 .ttl.caps { color:var(--c5); } .card.p5 ul li::before { background:var(--c5); }
+  .card.p6 .n, .card.p6 .ttl.caps { color:var(--c6); } .card.p6 ul li::before { background:var(--c6); }
+  @media (max-width:900px){ .cards.cols3 { grid-template-columns:1fr 1fr; } }
+  @media (max-width:680px){ .cards, .cards.cols3 { grid-template-columns:1fr; } }
+
+  .duo { display:grid; grid-template-columns:1fr 1fr; gap:0 32px; }
+  .duo h3 { font-size:15px; font-weight:600; margin-bottom:10px; text-transform:uppercase; letter-spacing:.06em; }
+  .duo ul { list-style:none; }
+  .duo li { font-size:15.5px; color:var(--txt2); line-height:1.5; padding:9px 0 9px 18px; border-bottom:1px solid var(--line); position:relative; }
+  .duo li::before { content:""; position:absolute; left:0; top:16px; width:7px; height:7px; border-radius:50%; }
+  .duo .a li::before { background:var(--c5); }
+  .duo .b li::before { background:var(--c4); }
+  .duo .a h3 { color:var(--c5); }
+  .duo .b h3 { color:var(--c4); }
+  @media (max-width:640px){ .duo { grid-template-columns:1fr; } }
+
+  ol.recs { counter-reset:r; list-style:none; display:flex; flex-direction:column; gap:12px; }
+  ol.recs li { counter-increment:r; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px 24px 20px 68px; position:relative; transition:border-color .25s; }
+  ol.recs li:hover { border-color:var(--line-strong); }
+  ol.recs li::before { content:counter(r); position:absolute; left:22px; top:22px; width:28px; height:28px;
+      border:1.5px solid var(--acc); color:var(--acc); border-radius:50%; font-size:14px; font-weight:600;
+      display:flex; align-items:center; justify-content:center; }
+  ol.recs li:nth-child(7n+1)::before { border-color:var(--c1); color:var(--c1); }
+  ol.recs li:nth-child(7n+2)::before { border-color:var(--c2); color:var(--c2); }
+  ol.recs li:nth-child(7n+3)::before { border-color:var(--c3); color:var(--c3); }
+  ol.recs li:nth-child(7n+4)::before { border-color:var(--c4); color:var(--c4); }
+  ol.recs li:nth-child(7n+5)::before { border-color:var(--c5); color:var(--c5); }
+  ol.recs li:nth-child(7n+6)::before { border-color:var(--c6); color:var(--c6); }
+  ol.recs li:nth-child(7n+7)::before { border-color:var(--c2); color:var(--c2); }
+  ol.recs b { font-weight:600; line-height:1.4; display:block; }
+  ol.recs b .ses { color:var(--mut); font-size:14px; font-weight:500; }
+  ol.recs p { color:var(--txt2); font-size:15.5px; line-height:1.6; margin-top:5px; }
+
+  /* интерактивный чеклист — отметки хранятся в localStorage */
+  .progress { display:flex; align-items:center; gap:14px; margin-bottom:22px; }
+  .progress .bar { flex:1; height:9px; background:var(--bar-track); border-radius:4px; overflow:hidden; }
+  .progress .bar i { display:block; height:100%; background:var(--acc); border-radius:4px; transition:width .25s; }
+  .progress .val { font-size:14px; color:var(--mut); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .check { list-style:none; border:1px solid var(--line); border-radius:14px; background:var(--card); padding:6px 26px; }
+  .check li { display:flex; align-items:flex-start; gap:14px; padding:12px 0; border-bottom:1px solid var(--line);
+              font-size:16px; color:var(--txt2); line-height:1.5; cursor:pointer; user-select:none; }
+  .check li:last-child { border-bottom:none; }
+  .check .box { flex-shrink:0; width:22px; height:22px; margin-top:3px; border:1.5px solid var(--acc); border-radius:6px;
+                display:flex; align-items:center; justify-content:center; transition:background .15s; }
+  .check .box svg { width:13px; height:13px; opacity:0; }
+  .check li.done .box { background:var(--acc); }
+  .check li.done .box svg { opacity:1; }
+  .check li.done { color:var(--mut); }
+  .check li.done span.t { text-decoration:line-through; text-decoration-color:var(--mut); }
+
+  .next { list-style:none; }
+  .next li { font-size:16px; color:var(--txt2); line-height:1.6; padding:10px 0 10px 20px; border-bottom:1px solid var(--line); position:relative; }
+  .next li:last-child { border-bottom:none; }
+  .next li::before { content:""; position:absolute; left:0; top:19px; width:7px; height:7px; border-radius:50%; background:var(--acc2); }
+  .next li:nth-child(5n+1)::before { background:var(--c1); }
+  .next li:nth-child(5n+2)::before { background:var(--c2); }
+  .next li:nth-child(5n+3)::before { background:var(--c4); }
+  .next li:nth-child(5n+4)::before { background:var(--c5); }
+  .next li:nth-child(5n+5)::before { background:var(--c3); }
+
+
+  /* --- интерактив: плавное появление секций --- */
+  section { opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease; }
+  section.lit { opacity:1; transform:none; }
+  @media (prefers-reduced-motion: reduce){ section { opacity:1; transform:none; transition:none; } }
+  /* --- индикатор прочтения сверху --- */
+  #readbar { position:fixed; top:0; left:0; height:3px; background:var(--acc2); width:0%; z-index:60; transition:width .1s linear; }
+  /* --- ховеры карточек в их собственном цвете --- */
+  .card.p1:hover { border-color:var(--c1); } .card.p2:hover { border-color:var(--c2); }
+  .card.p3:hover { border-color:var(--c3); } .card.p4:hover { border-color:var(--c4); }
+  .card.p5:hover { border-color:var(--c5); } .card.p6:hover { border-color:var(--c6); }
+  .card { transform:translateY(0); transition:border-color .25s, transform .25s; }
+  .card:hover { transform:translateY(-3px); }
+  /* --- активный раздел в оглавлении --- */
+  .toc a.on { color:var(--ink); font-weight:600; }
+  /* --- секция 08: библиотека скиллов --- */
+  .toc li:nth-child(8) .idx { color:var(--c3); }
+  #s08 .sec-head .idx { color:var(--c3); }
+  .repo { display:flex; align-items:center; gap:16px; border:1px solid var(--line); border-radius:14px; background:var(--card); padding:20px 24px; text-decoration:none; transition:border-color .25s, transform .25s; margin-bottom:22px; }
+  .repo:hover { border-color:var(--c3); transform:translateY(-3px); color:inherit; }
+  .repo .gh { width:34px; height:34px; flex-shrink:0; fill:var(--ink); }
+  .repo b { display:block; font-size:16.5px; color:var(--ink); }
+  .repo span { font-size:14px; color:var(--mut); }
+  .prompt { position:relative; border:1px solid var(--line); border-radius:14px; background:var(--card); padding:20px 24px; margin-top:22px; }
+  .prompt pre { font:14px/1.6 ui-monospace, "SF Mono", monospace; color:var(--txt2); white-space:pre-wrap; overflow-wrap:break-word; }
+  .prompt .copy { position:absolute; top:12px; right:12px; border:1px solid var(--line); background:var(--soft); color:var(--txt3);
+      font:13px "Golos Text", sans-serif; padding:5px 12px; border-radius:7px; cursor:pointer; transition:color .2s, border-color .2s; }
+  .prompt .copy:hover { color:var(--ink); border-color:var(--line-strong); }
+  .prompt .copy.ok { color:var(--acc); border-color:var(--acc); }
+
+  code { font:14px ui-monospace, "SF Mono", monospace; background:var(--soft); padding:1px 6px; border-radius:4px; }
+  /* ссылки всегда видны — цвет + подчёркивание */
+  a { color:var(--acc); text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:3px; text-decoration-color:var(--acc2); }
+  a:hover { color:var(--acc2); }
+  .toc a, .toc a:hover { text-decoration:none; }
+  .chip a { color:var(--ink); }
+  .foot { margin-top:84px; padding-top:22px; border-top:1px solid var(--line); font-size:13.5px; color:var(--mut); line-height:1.7; }
+</style>
+</head>
+<body>
+
+<div id="readbar"></div>
+
+<div class="theme" id="theme">
+  <button data-t="light">Light</button>
+  <button data-t="auto">Auto</button>
+  <button data-t="dark">Dark</button>
+</div>
+<script>
+(function(){
+  var root = document.documentElement, box = document.getElementById('theme');
+  function apply(t){
+    if(t==='auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', t);
+    localStorage.setItem('ainative-pamyatka-theme', t);
+    box.querySelectorAll('button').forEach(function(b){ b.classList.toggle('on', b.dataset.t===t); });
+  }
+  box.addEventListener('click', function(e){ if(e.target.dataset.t) apply(e.target.dataset.t); });
+  apply(localStorage.getItem('ainative-pamyatka-theme') || 'auto');
+})();
+</script>
+
+<div class="brand">
+  <svg class="logo" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AI Native">
+    <rect x="0"  y="44" width="64" height="14" rx="7" fill="#e9c5a0"/>
+    <rect x="11" y="25" width="42" height="14" rx="7" fill="#f5c842"/>
+    <rect x="21" y="6"  width="22" height="14" rx="7" fill="#22c55e"/>
+  </svg>
+  <div>
+    <h1><em>AI Native</em> — памятка участника</h1>
+    <div class="sub">Ключевые принципы, состав вашей PersonalOS и план догона после интенсива</div>
+  </div>
+</div>
+<div class="meta">
+  <span class="chip"><b>Курс:</b> AI Native, интенсив</span>
+  <span class="chip"><b>Автор:</b> Алексей Иванов · <a href="https://t.me/ppprompt">@ppprompt</a></span>
+  <span class="chip"><b>Материалы:</b> <a href="https://ivanov.coach/ai">ivanov.coach/ai</a></span>
+</div>
+
+<nav class="toc">
+  <div class="toc-title">Содержание</div>
+  <ol>
+    <li><a href="#s01"><span class="idx">01</span>Суть подхода в одном абзаце</a></li>
+    <li><a href="#s02"><span class="idx">02</span>6 принципов AI Native</a></li>
+    <li><a href="#s03"><span class="idx">03</span>Из чего состоит ваша PersonalOS</a></li>
+    <li><a href="#s04"><span class="idx">04</span>Скилл или агент — простое правило</a></li>
+    <li><a href="#s05"><span class="idx">05</span>Чеклист: где вы на пути к AI Native</a></li>
+    <li><a href="#s06"><span class="idx">06</span>Если отстали: план догона по шагам</a></li>
+    <li><a href="#s07"><span class="idx">07</span>Что делать дальше</a></li>
+    <li><a href="#s08"><span class="idx">08</span>Библиотека скиллов на GitHub</a></li>
+  </ol>
+</nav>
+
+<section id="s01">
+  <div class="sec-head"><span class="idx">01</span><h2>Суть подхода в одном абзаце</h2></div>
+  <p class="intro">AI Native — это не про инструменты, они все время меняются. Это про систему: <b>одна база знаний</b> (весь ваш контекст) + <b>AI-инструменты под задачи</b> (действия) + <b>инструкции, скиллы и агенты</b>, которые их соединяют. Вы — дирижер этого оркестра. Ключевой вопрос, который вы теперь задаете себе про любой процесс: <b>«Как мне делать это иначе, имея ИИ в своей команде?»</b></p>
+</section>
+
+<section id="s02">
+  <div class="sec-head"><span class="idx">02</span><h2>6 принципов AI Native</h2></div>
+  <div class="cards cols3">
+    <div class="card p1"><div class="n">01</div><div class="ttl caps">Контекст важнее промптов</div>
+      <p>Хорошо собранный контекст — это уже 80% результата. Промпт может быть в одно предложение.</p></div>
+    <div class="card p2"><div class="n">02</div><div class="ttl caps">Правило 0 → 80 → 100</div>
+      <p>ИИ делает первые 80% за минуты, вы доводите финальные 20%. Экономия не 20%, а 70–80%.</p></div>
+    <div class="card p3"><div class="n">03</div><div class="ttl caps">Система, а не чаты</div>
+      <p>Не 200 разрозненных чатов, а PersonalOS: база знаний + память + инструкции + скиллы + агенты.</p></div>
+    <div class="card p4"><div class="n">04</div><div class="ttl caps">Верный инструмент под задачу</div>
+      <p>Небольшой стек, где под каждую типовую задачу есть свой инструмент. Без FOMO на каждый новый сервис.</p></div>
+    <div class="card p5"><div class="n">05</div><div class="ttl caps">Суждение: с AI или без</div>
+      <p>Знать, когда AI не нужен: суть задачи — подумать самому, нужен личный голос, высоки ставки, важна человеческая связь.</p></div>
+    <div class="card p6"><div class="n">06</div><div class="ttl caps">Скиллы и агенты для повторяющегося</div>
+      <p>Все, что повторяется, превращаем в скилл или агента и выводим себя за скобки.</p></div>
+  </div>
+</section>
+
+<section id="s03">
+  <div class="sec-head"><span class="idx">03</span><h2>Из чего состоит ваша PersonalOS</h2></div>
+  <div class="cards cols3">
+    <div class="card p3"><div class="n">A</div><div class="ttl caps">Знания — весь контекст</div>
+      <ul>
+        <li>База знаний в одном месте: локально (md + Obsidian) или в облаке (Google Drive)</li>
+        <li>aboutme.md — все важное о вас</li>
+        <li>Память, выгруженная из ваших LLM</li>
+        <li>Swipe-файлы — лучшие практики по областям</li>
+        <li>Библиотека промптов</li>
+        <li>Системный промпт в основном LLM</li>
+      </ul></div>
+    <div class="card p2"><div class="n">B</div><div class="ttl caps">Действия — инструменты</div>
+      <p>Поиск, исследования, транскрибация звонков, голосовой ввод, картинки, работа с файлами, кодинг, автоматизации.</p>
+      <p>Составьте свой список «задача → инструмент» на 10–15 основных задач.</p></div>
+    <div class="card p5"><div class="n">C</div><div class="ttl caps">Инструкции и автономия</div>
+      <ul>
+        <li>Agents.md / Claude.md — правила и описание вашей базы для ИИ</li>
+        <li>Скиллы — шаблонные повторяемые задачи</li>
+        <li>Агенты — автономные помощники, сами выбирают инструменты</li>
+        <li>Автоматизации — например, транскрипты сами попадают в базу</li>
+      </ul></div>
+  </div>
+  <p class="note">Форматы файлов: md (лучший для LLM), txt, csv, pdf — чем легче, тем проще LLM работать со всем вашим контекстом.</p>
+</section>
+
+<section id="s04">
+  <div class="sec-head"><span class="idx">04</span><h2>Скилл или агент — простое правило</h2></div>
+  <div class="duo">
+    <div class="a"><h3>Скилл /</h3><ul>
+      <li>Шагов мало и они простые</li>
+      <li>Есть понятный шаблон</li>
+      <li>Продолжительность задачи небольшая</li>
+      <li>Автономная многоходовая работа не требуется</li>
+    </ul></div>
+    <div class="b"><h3>Агент @</h3><ul>
+      <li>Несколько шагов и нужны итерации</li>
+      <li>Задачи сложные, не по простому шаблону</li>
+      <li>Требуется автономная работа в несколько ходов</li>
+      <li>Агент сам выбирает инструменты в рамках задачи</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="s05">
+  <div class="sec-head"><span class="idx">05</span><h2>Чеклист: где вы на пути к AI Native</h2></div>
+  <div class="progress"><div class="bar"><i id="pbar" style="width:0%"></i></div><span class="val" id="pval">0 / 12</span></div>
+  <ul class="check" id="checklist">
+    <li data-k="c1"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5L6 12L13.5 4" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="t">Собрана база знаний, ключевые файлы в одном месте</span></li>
+    <li data-k="c2"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5L6 12L13.5 4" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="t">Создан aboutme.md</span></li>
+    <li data-k="c3"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5L6 12L13.5 4" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="t">Выгружена и сохранена память из основного LLM</span></li>
+    <li data-k="c4"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5L6 12L13.5 4" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="t">Настроен системный промпт под себя</span></li>
+    <li data-k="c5"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5L6 12L13.5 4" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="t">Собраны swipe-файлы и библиотека промптов</span></li>
+    <li data-k="c6"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5L6 12L13.5 4" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="t">Составлен стек: инструмент под каждую из 10–15 основных задач</span></li>
+    <li data-k="c7"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5L6 12L13.5 4" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="t">Хотя бы один процесс переведен на 0 → 80 → 100</span></li>
+    <li data-k="c8"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5L6 12L13.5 4" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="t">Есть список «делаю с AI / делаю сам»</span></li>
+    <li data-k="c9"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5L6 12L13.5 4" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="t">Настроена хотя бы одна автоматизация (например, транскрипты → база)</span></li>
+    <li data-k="c10"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5L6 12L13.5 4" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="t">Создано 2–3 скилла под типовые задачи</span></li>
+    <li data-k="c11"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5L6 12L13.5 4" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="t">Есть понимание, как работать с агентами</span></li>
+    <li data-k="c12"><span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5L6 12L13.5 4" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="t">Запущен свой агент-ассистент с доступом к базе и скиллам (advanced)</span></li>
+  </ul>
+  <p class="note">Пункты кликабельны — отметки сохраняются в этом браузере. Если отмечено все до «скиллов», вы уже твердо выше уровня AI Literate. Остальное — вопрос практики.</p>
+</section>
+
+<section id="s06">
+  <div class="sec-head"><span class="idx">06</span><h2>Если отстали: план догона по шагам</h2></div>
+  <p class="intro" style="margin-bottom:22px">Идите строго по порядку, каждый шаг опирается на предыдущий. Один шаг — это 30–60 минут, можно делать по одному в день.</p>
+  <ol class="recs">
+    <li><b>База знаний <span class="ses">· сессия 1</span></b>
+      <p>Выберите место: папка на диске + Obsidian или Google Drive. Стащите туда ключевые файлы, с которыми работаете. Тяжелые форматы конвертируйте в md/txt.</p></li>
+    <li><b>aboutme.md <span class="ses">· сессии 1–2</span></b>
+      <p>Потратьте 10–30 минут и опишите все важное о себе: кто вы, чем занимаетесь, ваши проекты, стиль, предпочтения. Подключайте этот файл к работе с ИИ.</p></li>
+    <li><b>Память и системный промпт <span class="ses">· сессия 2</span></b>
+      <p>Попросите ваш основной LLM выгрузить, что он о вас помнит. Причешите и положите в базу. Затем напишите системные инструкции и обновите настройки LLM.</p></li>
+    <li><b>Стек инструментов <span class="ses">· сессии 2–3</span></b>
+      <p>Выпишите 10–15 регулярных задач. Под каждую подберите один инструмент. Не гонитесь за новинками — хватает небольшого набора.</p></li>
+    <li><b>Один процесс через 0 → 80 → 100 <span class="ses">· сессия 3</span></b>
+      <p>Возьмите один рабочий процесс, распишите по шагам, отметьте, какие шаги отдаете ИИ. Прогоните пару раз, добейтесь соотношения 80% AI / 20% вы.</p></li>
+    <li><b>Первый скилл <span class="ses">· сессия 4</span></b>
+      <p>Возьмите повторяющуюся задачу и превратите ее в скилл в Claude Code или аналоге. Потом еще 1–2.</p></li>
+    <li><b>Первый агент <span class="ses">· сессии 5–6</span></b>
+      <p>Создайте агента под круг задач: разбор почты, исследования, работа с todo. Дайте ему доступ к базе знаний и скиллам. Advanced: вынесите на VPS и подключите телеграм-бота.</p></li>
+  </ol>
+  <p class="note">Застряли на шаге — идите в записи соответствующей сессии, в Q&amp;A-док или задавайте вопрос в телеграм-группе. Все материалы и записи остаются доступны.</p>
+</section>
+
+<section id="s07">
+  <div class="sec-head"><span class="idx">07</span><h2>Что делать дальше</h2></div>
+  <ul class="next">
+    <li>Продолжайте собирать контекст отовсюду — материалы этого курса тоже контекст</li>
+    <li>Перекладывайте скучную рутину на AI: скиллы, агенты, автоматизации</li>
+    <li>Внедряйте принципы спокойно и без FOMO — себе, коллегам, близким</li>
+    <li>Вопросы и поддержка: телеграм-группа курса, команда <a href="https://t.me/realPonchikTeam">@realPonchikTeam</a></li>
+    <li>Материалы и следующие потоки: <a href="https://ivanov.coach/ai">ivanov.coach/ai</a>, канал <a href="https://t.me/ppprompt">@ppprompt</a></li>
+  </ul>
+</section>
+
+<section id="s08">
+  <div class="sec-head"><span class="idx">08</span><h2>Библиотека скиллов на GitHub</h2></div>
+  <p class="intro" style="margin-bottom:22px">Готовые скиллы с курса лежат в открытом репозитории — контент-пак, генератор слайдов и лендингов, подготовка к встречам, Q&amp;A из транскриптов и другие. Не нужно ничего собирать руками: дайте своему агенту ссылку, и он установит скилл сам.</p>
+  <a class="repo" href="https://github.com/alexivanovvv/ai-native/tree/main/SKILLS">
+    <svg class="gh" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    <span><b>github.com/alexivanovvv/ai-native · SKILLS</b><span>Открытая библиотека скиллов интенсива AI Native</span></span>
+  </a>
+  <ol class="recs">
+    <li><b>Выберите скилл</b>
+      <p>Откройте репозиторий, зайдите в папку <code>SKILLS/</code> и посмотрите README нужного скилла — что он делает и что ему нужно.</p></li>
+    <li><b>Дайте агенту ссылку и попросите установить</b>
+      <p>Скилл — это просто папка с файлом <code>SKILL.md</code> внутри <code>~/.claude/skills/</code>. Claude Code (или Cowork) сам скачает файлы, прочитает инструкции и поставит зависимости. Готовый промпт — ниже, просто подставьте имя скилла.</p></li>
+    <li><b>Проверьте вызов</b>
+      <p>Перезапустите сессию и вызовите скилл: <code>/имя-скилла</code> — или опишите задачу словами, агент сам поймет, что скилл подходит.</p></li>
+  </ol>
+  <div class="prompt">
+    <button class="copy" id="copyPrompt">Копировать</button>
+    <pre id="promptText">Установи мне скилл content-pack из репозитория
+https://github.com/alexivanovvv/ai-native (папка SKILLS/content-pack).
+
+Скачай файлы скилла в ~/.claude/skills/content-pack/, прочитай SKILL.md,
+установи зависимости, если они нужны, и покажи пример, как его вызвать.</pre>
+  </div>
+  <p class="note">Промпт универсальный — замените content-pack на любой скилл из репозитория. Работает в Claude Code, Claude Cowork и совместимых агентах (Codex и др. — путь к папке скиллов может отличаться, агент разберется).</p>
+</section>
+
+<div class="foot">Памятка участника интенсива AI Native · собрана из материалов курса (слайды сессий 1–6). Отметки чеклиста хранятся локально в вашем браузере и никуда не отправляются.</div>
+
+<script>
+(function(){
+  var KEY = 'ainative-pamyatka-checks';
+  var list = document.getElementById('checklist');
+  var items = list.querySelectorAll('li');
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e) {}
+  function render(){
+    var done = 0;
+    items.forEach(function(li){
+      var on = !!state[li.dataset.k];
+      li.classList.toggle('done', on);
+      if(on) done++;
+    });
+    document.getElementById('pbar').style.width = (done/items.length*100) + '%';
+    document.getElementById('pval').textContent = done + ' / ' + items.length;
+  }
+  list.addEventListener('click', function(e){
+    var li = e.target.closest('li');
+    if(!li) return;
+    state[li.dataset.k] = !state[li.dataset.k];
+    localStorage.setItem(KEY, JSON.stringify(state));
+    render();
+  });
+  render();
+})();
+</script>
+
+
+<script>
+(function(){
+  // появление секций
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('lit'); io.unobserve(e.target); } });
+  }, {threshold:.12});
+  document.querySelectorAll('section').forEach(function(x){ io.observe(x); });
+  // индикатор прочтения
+  var bar = document.getElementById('readbar');
+  function upd(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? (h.scrollTop / max * 100) : 0) + '%';
+  }
+  addEventListener('scroll', upd, {passive:true}); upd();
+  // подсветка активного раздела в оглавлении
+  var links = Array.from(document.querySelectorAll('.toc a'));
+  var spy = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(!e.isIntersecting) return;
+      var id = '#' + e.target.id;
+      links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href') === id); });
+    });
+  }, {rootMargin:'-20% 0px -70% 0px'});
+  document.querySelectorAll('section[id]').forEach(function(x){ spy.observe(x); });
+  // копирование промпта
+  var btn = document.getElementById('copyPrompt');
+  if(btn){
+    btn.addEventListener('click', function(){
+      navigator.clipboard.writeText(document.getElementById('promptText').textContent).then(function(){
+        btn.textContent = 'Скопировано ✓'; btn.classList.add('ok');
+        setTimeout(function(){ btn.textContent = 'Копировать'; btn.classList.remove('ok'); }, 2000);
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>

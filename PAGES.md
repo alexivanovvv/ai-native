@@ -15,6 +15,7 @@ The site is served from the `docs/` folder, and the root `index.html` redirects 
 | `docs/ai-native-personal-ai-os.html` | The Personal AI OS model | Use it when you want to understand the system behind the method |
 | `docs/ai-native-knowledge-base-guide.html` | How to build and fill a knowledge base | Use it when you want practical sourcing and curation guidance |
 | `docs/ai-native-prompts.html` | Reusable prompt templates | Use it when you want ready-to-use prompts for repeat tasks |
+| `docs/ai-native-memo.html` | Participant memo: principles, PersonalOS, interactive checklist, catch-up plan | Use it after the course to recall the essentials or catch up step by step |
 
 ## Shared asset
 
@@ -30,5 +31,6 @@ The site is served from the `docs/` folder, and the root `index.html` redirects 
 4. `docs/ai-native-personal-ai-os.html`
 5. `docs/ai-native-knowledge-base-guide.html`
 6. `docs/ai-native-prompts.html`
+7. `docs/ai-native-memo.html`
 
 If you only have a minute, start with `docs/ai-native-in-brief.html`.
