@@ -1,39 +1,57 @@
 <!doctype html>
-<html lang='ru'>
+<html lang="ru">
 <head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <title>AI Native Prompts</title>
-  <link rel='preconnect' href='https://fonts.googleapis.com'>
-  <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
-  <link href='https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Golos+Text:wght@400;500;600;700&display=swap' rel='stylesheet'>
-  <link rel='stylesheet' href='site.css'>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Native — библиотека промптов</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
 </head>
 <body>
-  <div class='page'>
-    <header class='topbar'>
-      <a class='brand' href='index.html'>AI Native</a>
-      <nav class='nav'>
-        <a href='index.html'>Главная</a>
-        <a href='ai-native-in-brief.html'>Кратко</a>
-        <a href='ai-native-principles.html'>Принципы</a>
-        <a href='ai-native-personal-ai-os.html'>Personal AI OS</a>
-        <a href='ai-native-knowledge-base-guide.html'>База знаний</a>
-        <a class='active' href='ai-native-prompts.html'>Промпты</a>
-        <a href='ai-native-memo.html'>Памятка</a>
-      </nav>
-    </header>
 
-    <section class='hero'>
-      <div class='kicker'>Reusable Prompts</div>
-      <h1>Рабочая библиотека промптов</h1>
-      <p class='lead'>Промпт работает лучше, когда рядом с ним есть контекст, примеры и критерии качества. Эти шаблоны не про магию, а про повторяемые задачи, которые удобно запускать быстро и предсказуемо.</p>
-    </section>
+<div id="readbar"></div>
 
-    <section>
-      <details>
-        <summary>1. Разбор коучинг-сессии<span class='hint'>Используйте после встречи, чтобы быстро вытащить главный сдвиг, цитаты и следующий шаг.</span></summary>
-        <pre><code>Вот транскрипт моей коучинг-сессии с клиентом.
+<header class="topnav">
+  <a class="brandmark" href="index.html">
+    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AI Native">
+      <rect x="0"  y="44" width="64" height="14" rx="7" fill="#e9c5a0"/>
+      <rect x="11" y="25" width="42" height="14" rx="7" fill="#f5c842"/>
+      <rect x="21" y="6"  width="22" height="14" rx="7" fill="#22c55e"/>
+    </svg>
+    <b>AI Native</b>
+  </a>
+  <nav class="navlinks">
+    <a href="index.html">Главная</a>
+    <a href="ai-native-in-brief.html">Кратко</a>
+    <a href="ai-native-principles.html">Принципы</a>
+    <a href="ai-native-personal-ai-os.html">Personal AI OS</a>
+    <a href="ai-native-knowledge-base-guide.html">База знаний</a>
+    <a class="active" href="ai-native-prompts.html">Промпты</a>
+    <a href="ai-native-memo.html">Памятка</a>
+  </nav>
+  <div class="theme" id="theme">
+    <button data-t="light">Light</button>
+    <button data-t="auto">Auto</button>
+    <button data-t="dark">Dark</button>
+  </div>
+</header>
+
+<div class="brand">
+  <div>
+    <div class="kicker">Reusable Prompts</div>
+    <h1>Рабочая библиотека промптов</h1>
+    <p class="sub">Промпт работает лучше, когда рядом с ним есть контекст, примеры и критерии качества. Эти шаблоны не про магию, а про повторяемые задачи, которые удобно запускать быстро и предсказуемо.</p>
+  </div>
+</div>
+
+<section id="s01">
+  <div class="sec-head"><span class="idx">01</span><h2>10 шаблонов</h2></div>
+
+  <details class="acc" open>
+    <summary><span class="n">01</span><span>Разбор коучинг-сессии<span class="hint">Используйте после встречи, чтобы быстро вытащить главный сдвиг, цитаты и следующий шаг.</span></span><span class="arrow">→</span></summary>
+    <div class="prompt"><button class="copy">Копировать</button><pre>Вот транскрипт моей коучинг-сессии с клиентом.
 
 Проанализируй и выдай:
 
@@ -46,12 +64,12 @@
 
 Не интерпретируй за клиента. Опирайся только на то, что он сказал.
 
-[ВСТАВИТЬ ТРАНСКРИПТ]</code></pre>
-      </details>
+[ВСТАВИТЬ ТРАНСКРИПТ]</pre></div>
+  </details>
 
-      <details>
-        <summary>2. Пост для @ppprompt<span class='hint'>Когда нужен текст для Telegram-канала в моем стиле и с нормальной структурой.</span></summary>
-        <pre><code>Ты помогаешь мне написать пост для Telegram-канала @ppprompt.
+  <details class="acc">
+    <summary><span class="n">02</span><span>Пост для @ppprompt<span class="hint">Когда нужен текст для Telegram-канала в моём стиле и с нормальной структурой.</span></span><span class="arrow">→</span></summary>
+    <div class="prompt"><button class="copy">Копировать</button><pre>Ты помогаешь мне написать пост для Telegram-канала @ppprompt.
 
 Вот 2-3 примера моих лучших постов:
 [ПРИМЕРЫ]
@@ -65,12 +83,12 @@
 - тон уверенный, но без пафоса
 - закончить вопросом или сильной мыслью
 - без эмодзи в основном тексте
-- 200-400 слов</code></pre>
-      </details>
+- 200-400 слов</pre></div>
+  </details>
 
-      <details>
-        <summary>3. Подготовка к коучинг-сессии<span class='hint'>Чтобы прийти на встречу не с пустой головой, а с хорошими вопросами и гипотезами.</span></summary>
-        <pre><code>Я готовлюсь к коучинг-сессии с клиентом.
+  <details class="acc">
+    <summary><span class="n">03</span><span>Подготовка к коучинг-сессии<span class="hint">Чтобы прийти на встречу не с пустой головой, а с хорошими вопросами и гипотезами.</span></span><span class="arrow">→</span></summary>
+    <div class="prompt"><button class="copy">Копировать</button><pre>Я готовлюсь к коучинг-сессии с клиентом.
 
 О клиенте:
 [КОНТЕКСТ]
@@ -87,12 +105,12 @@
 3. Что может быть слоном в комнате?
 4. Какие фреймворки могут помочь?
 
-Не давай план сессии. Дай материал для размышления перед сессией.</code></pre>
-      </details>
+Не давай план сессии. Дай материал для размышления перед сессией.</pre></div>
+  </details>
 
-      <details>
-        <summary>4. Red team решения<span class='hint'>Когда нужно проверить идею на прочность до того, как вы потратите на нее время.</span></summary>
-        <pre><code>Я принимаю решение и хочу, чтобы ты провел red team.
+  <details class="acc">
+    <summary><span class="n">04</span><span>Red team решения<span class="hint">Когда нужно проверить идею на прочность до того, как вы потратите на неё время.</span></span><span class="arrow">→</span></summary>
+    <div class="prompt"><button class="copy">Копировать</button><pre>Я принимаю решение и хочу, чтобы ты провёл red team.
 
 Контекст:
 [ОПИСАНИЕ]
@@ -110,12 +128,12 @@
 4. риски, которые проявятся позже
 5. альтернатива, которую я не рассматриваю
 
-Не соглашайся со мной ради вежливости. Отделяй факты от предположений.</code></pre>
-      </details>
+Не соглашайся со мной ради вежливости. Отделяй факты от предположений.</pre></div>
+  </details>
 
-      <details>
-        <summary>5. Черновик программы или курса<span class='hint'>Для проектирования курса, воркшопа или интенсивной программы.</span></summary>
-        <pre><code>Помоги спроектировать программу обучения.
+  <details class="acc">
+    <summary><span class="n">05</span><span>Черновик программы или курса<span class="hint">Для проектирования курса, воркшопа или интенсивной программы.</span></span><span class="arrow">→</span></summary>
+    <div class="prompt"><button class="copy">Копировать</button><pre>Помоги спроектировать программу обучения.
 
 Тема: [ТЕМА]
 Целевая аудитория: [КТО]
@@ -126,15 +144,15 @@
 1. логику программы
 2. структуру сессий
 3. результат и активности для каждой сессии
-4. артефакты, которые участник унесет с собой
+4. артефакты, которые участник унесёт с собой
 5. что не включать, чтобы не распыляться
 
-Принцип: участник уходит не с конспектом, а с работающей системой.</code></pre>
-      </details>
+Принцип: участник уходит не с конспектом, а с работающей системой.</pre></div>
+  </details>
 
-      <details>
-        <summary>6. Коммерческое предложение<span class='hint'>Для коучинга, воркшопа или программы - когда нужен аккуратный, профессиональный оффер.</span></summary>
-        <pre><code>Помоги написать коммерческое предложение.
+  <details class="acc">
+    <summary><span class="n">06</span><span>Коммерческое предложение<span class="hint">Для коучинга, воркшопа или программы - когда нужен аккуратный, профессиональный оффер.</span></span><span class="arrow">→</span></summary>
+    <div class="prompt"><button class="copy">Копировать</button><pre>Помоги написать коммерческое предложение.
 
 Для кого: [КЛИЕНТ ИЛИ КОМПАНИЯ]
 Что предлагаю: [УСЛУГА]
@@ -149,14 +167,14 @@
 5. условия и следующий шаг
 6. короткое био обо мне
 
-Тон: уверенный, профессиональный, без клише.</code></pre>
-      </details>
+Тон: уверенный, профессиональный, без клише.</pre></div>
+  </details>
 
-      <details>
-        <summary>7. Синтез встречи или транскрипта<span class='hint'>Для любой встречи, где нужно быстро собрать решения, открытые вопросы и action items.</span></summary>
-        <pre><code>Вот транскрипт встречи. Проанализируй и выдай структурированное резюме:
+  <details class="acc">
+    <summary><span class="n">07</span><span>Синтез встречи или транскрипта<span class="hint">Для любой встречи, где нужно быстро собрать решения, открытые вопросы и action items.</span></span><span class="arrow">→</span></summary>
+    <div class="prompt"><button class="copy">Копировать</button><pre>Вот транскрипт встречи. Проанализируй и выдай структурированное резюме:
 
-1. о чем встреча - в 1-2 предложениях
+1. о чём встреча - в 1-2 предложениях
 2. ключевые решения
 3. открытые вопросы
 4. action items с ответственными и сроками
@@ -165,12 +183,12 @@
 Формат: компактно, по пунктам.
 Если ответственный или срок не названы, пометь это как неизвестное.
 
-[ВСТАВИТЬ ТРАНСКРИПТ]</code></pre>
-      </details>
+[ВСТАВИТЬ ТРАНСКРИПТ]</pre></div>
+  </details>
 
-      <details>
-        <summary>8. Контент-план из одной идеи<span class='hint'>Когда есть одна сильная мысль и ее нужно развернуть в несколько форматов.</span></summary>
-        <pre><code>У меня есть одна мысль:
+  <details class="acc">
+    <summary><span class="n">08</span><span>Контент-план из одной идеи<span class="hint">Когда есть одна сильная мысль и её нужно развернуть в несколько форматов.</span></span><span class="arrow">→</span></summary>
+    <div class="prompt"><button class="copy">Копировать</button><pre>У меня есть одна мысль:
 
 [МЫСЛЬ]
 
@@ -180,12 +198,12 @@
 3. тезисы для видео или стрима
 4. тема для рассылки или истории
 
-Для каждого формата дай готовый черновик, а не описание того, что можно написать.</code></pre>
-      </details>
+Для каждого формата дай готовый черновик, а не описание того, что можно написать.</pre></div>
+  </details>
 
-      <details>
-        <summary>9. Анализ стратегии или продукта<span class='hint'>Подходит, когда нужно проверить рыночную логику, fit с экосистемой и первые риски.</span></summary>
-        <pre><code>Помоги мне проанализировать продуктовое или стратегическое решение.
+  <details class="acc">
+    <summary><span class="n">09</span><span>Анализ стратегии или продукта<span class="hint">Подходит, когда нужно проверить рыночную логику, fit с экосистемой и первые риски.</span></span><span class="arrow">→</span></summary>
+    <div class="prompt"><button class="copy">Копировать</button><pre>Помоги мне проанализировать продуктовое или стратегическое решение.
 
 Контекст моего бизнеса:
 - executive coaching
@@ -203,12 +221,12 @@
 4. что может пойти не так
 5. какой минимальный шаг можно сделать за неделю
 
-Фильтр: yes, если компаундится в экосистеме, шипается быстро и aligned с глубиной и правдой.</code></pre>
-      </details>
+Фильтр: yes, если компаундится в экосистеме, шипается быстро и aligned с глубиной и правдой.</pre></div>
+  </details>
 
-      <details>
-        <summary>10. Извлечение идей из источника<span class='hint'>Для книги, статьи, подкаста или видео, которое нужно превратить в полезный рабочий материал.</span></summary>
-        <pre><code>Вот источник:
+  <details class="acc">
+    <summary><span class="n">10</span><span>Извлечение идей из источника<span class="hint">Для книги, статьи, подкаста или видео, которое нужно превратить в полезный рабочий материал.</span></span><span class="arrow">→</span></summary>
+    <div class="prompt"><button class="copy">Копировать</button><pre>Вот источник:
 [ТЕКСТ ИЛИ ССЫЛКА]
 
 Проанализируй и выдай:
@@ -218,13 +236,12 @@
 4. цитаты или формулировки, которые стоит сохранить
 5. следующий шаг - как использовать это на практике
 
-Не пересказывай источник целиком. Вытащи только то, что реально полезно.</code></pre>
-      </details>
-    </section>
+Не пересказывай источник целиком. Вытащи только то, что реально полезно.</pre></div>
+  </details>
+</section>
 
-    <footer>
-      Эти шаблоны работают лучше всего вместе с хорошим контекстом и коротким циклом проверки. Промпт - это не магия, а форма упаковки задачи.
-    </footer>
-  </div>
+<div class="foot">Эти шаблоны работают лучше всего вместе с хорошим контекстом и коротким циклом проверки. Промпт — это не магия, а форма упаковки задачи. Дальше — <a href="ai-native-memo.html">памятка участника</a> с чеклистом и планом догона.</div>
+
+<script src="site.js"></script>
 </body>
 </html>

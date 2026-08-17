@@ -7,205 +7,41 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
 <style>
-  :root {
-    --ink:#231e14; --mut:#948a72; --line:#e2d7bf; --acc:#2f6f4f; --acc2:#b8752e; --bg:#f6f1e6; --soft:#efe7d5;
-    --card:#faf6ee; --line-strong:#cdbd97; --txt2:#3f392c; --txt3:#5c5646; --bar-track:#e2d7bf; --bar-mut:rgba(35,30,20,.22);
-    /* палитра принципов — как на слайдах курса, затемнённая под бежевую бумагу */
-    --c1:#8f6b00; --c2:#bf4a2b; --c3:#3a7d3f; --c4:#a63f8f; --c5:#22699c; --c6:#9a7500;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --ink:#f1f0e9; --mut:#8f8e88; --line:rgba(255,255,255,.09); --acc:#6fc79a; --acc2:#e8a855; --bg:#0a0b0c; --soft:rgba(255,255,255,.045);
-      --card:rgba(255,255,255,.03); --line-strong:rgba(255,255,255,.22); --txt2:#d2d1ca; --txt3:#a9a8a1; --bar-track:rgba(255,255,255,.09); --bar-mut:rgba(255,255,255,.26);
-      --c1:#f2e06a; --c2:#ff8f73; --c3:#a5e08a; --c4:#f08ae0; --c5:#6fc3f0; --c6:#ffd84d;
-    }
-  }
-  :root[data-theme="dark"] {
-    --ink:#f1f0e9; --mut:#8f8e88; --line:rgba(255,255,255,.09); --acc:#6fc79a; --acc2:#e8a855; --bg:#0a0b0c; --soft:rgba(255,255,255,.045);
-    --card:rgba(255,255,255,.03); --line-strong:rgba(255,255,255,.22); --txt2:#d2d1ca; --txt3:#a9a8a1; --bar-track:rgba(255,255,255,.09); --bar-mut:rgba(255,255,255,.26);
-    --c1:#f2e06a; --c2:#ff8f73; --c3:#a5e08a; --c4:#f08ae0; --c5:#6fc3f0; --c6:#ffd84d;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index:40; opacity:.4;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.47 0 0 0 0 0.4 0 0 0 0.025 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E"); }
-  body { background:var(--bg); color:var(--ink); font:18px/1.65 "Golos Text", -apple-system, "SF Pro Text", Helvetica, sans-serif;
-         max-width:900px; margin:0 auto; padding:88px 36px 110px; transition:background .2s, color .2s; }
-  .theme { position:absolute; top:24px; right:24px; display:flex; gap:2px; border:1px solid var(--line); border-radius:8px; padding:2px; }
-  .theme button { border:none; background:none; color:var(--mut); font:13px "Golos Text", -apple-system, sans-serif; padding:5px 11px; border-radius:6px; cursor:pointer; }
-  .theme button.on { background:var(--soft); color:var(--ink); }
-
-  .brand { display:flex; align-items:center; gap:20px; }
-  .brand .logo { width:68px; height:68px; flex-shrink:0; }
-  h1 { font-family:"Fraunces", "Golos Text", serif; font-size:44px; font-weight:600; letter-spacing:-.01em; line-height:1.12; }
-  h1::after { content:"."; color:var(--acc2); }
-  h1 em { font-style:normal; color:var(--c6); }
-  .sub { color:var(--mut); margin-top:8px; font-size:16px; }
-  .meta { display:flex; flex-wrap:wrap; gap:8px; margin-top:22px; }
-  .chip { font-size:14px; color:var(--txt3); border:1px solid var(--line); border-radius:8px; padding:6px 13px; background:var(--soft); }
-  .chip b { font-weight:600; color:var(--ink); }
-
-  html { scroll-behavior:smooth; }
-  .toc { margin-top:44px; border:1px solid var(--line); border-radius:12px; background:var(--card); padding:22px 26px 18px; }
-  .toc .toc-title { font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:.11em; color:var(--mut); margin-bottom:12px; }
-  .toc ol { list-style:none; columns:2; column-gap:36px; }
-  .toc li { break-inside:avoid; }
-  .toc a { display:flex; align-items:baseline; gap:12px; color:var(--txt2); text-decoration:none; font-size:15.5px; line-height:1.45; padding:6px 0; }
-  .toc a .idx { font-family:"Fraunces", serif; font-size:13px; font-weight:600; flex-shrink:0; font-variant-numeric:tabular-nums; }
-  .toc li:nth-child(1) .idx { color:var(--c1); } .toc li:nth-child(2) .idx { color:var(--c2); }
-  .toc li:nth-child(3) .idx { color:var(--c3); } .toc li:nth-child(4) .idx { color:var(--c4); }
-  .toc li:nth-child(5) .idx { color:var(--c5); } .toc li:nth-child(6) .idx { color:var(--c6); }
-  .toc li:nth-child(7) .idx { color:var(--c2); }
-  .toc a:hover { color:var(--ink); }
-  @media (max-width:640px){ .toc ol { columns:1; } }
-
-  section { margin-top:88px; scroll-margin-top:28px; }
-  .sec-head { display:flex; align-items:baseline; gap:14px; border-bottom:1px solid var(--line); padding-bottom:12px; margin-bottom:30px; }
-  .sec-head .idx { font-family:"Fraunces", serif; font-size:17px; color:var(--acc2); font-weight:600; letter-spacing:.02em; }
-  #s01 .sec-head .idx { color:var(--c1); } #s02 .sec-head .idx { color:var(--c2); }
-  #s03 .sec-head .idx { color:var(--c3); } #s04 .sec-head .idx { color:var(--c4); }
-  #s05 .sec-head .idx { color:var(--c5); } #s06 .sec-head .idx { color:var(--c6); }
-  #s07 .sec-head .idx { color:var(--c2); }
-  .sec-head h2 { font-size:14px; font-weight:600; text-transform:uppercase; letter-spacing:.11em; color:var(--mut); }
-  .note { margin-top:18px; font-size:14.5px; color:var(--txt3); line-height:1.6; max-width:640px; }
-  .intro { font-size:17.5px; color:var(--txt2); line-height:1.7; max-width:780px; }
-  .intro b { color:var(--ink); }
-
-  .cards { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-  .cards.cols3 { grid-template-columns:1fr 1fr 1fr; }
-  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:26px 28px 24px; transition:border-color .25s; }
-  .card:hover { border-color:var(--line-strong); }
-  .card .n { font-family:"Fraunces", serif; font-size:15px; font-weight:600; color:var(--acc2); margin-bottom:10px; }
-  .card .ttl { font-size:17px; font-weight:600; line-height:1.35; }
-  .card .ttl.caps { font-size:14.5px; text-transform:uppercase; letter-spacing:.07em; font-weight:700; }
-  .card p { color:var(--txt2); font-size:15.5px; line-height:1.6; margin-top:12px; }
-  .card ul { list-style:none; margin-top:12px; }
-  .card ul li { font-size:15px; color:var(--txt2); line-height:1.5; padding:5px 0 5px 17px; position:relative; }
-  .card ul li::before { content:""; position:absolute; left:0; top:12px; width:6px; height:6px; border-radius:50%; background:var(--acc); }
-  .card.p1 .n, .card.p1 .ttl.caps { color:var(--c1); } .card.p1 ul li::before { background:var(--c1); }
-  .card.p2 .n, .card.p2 .ttl.caps { color:var(--c2); } .card.p2 ul li::before { background:var(--c2); }
-  .card.p3 .n, .card.p3 .ttl.caps { color:var(--c3); } .card.p3 ul li::before { background:var(--c3); }
-  .card.p4 .n, .card.p4 .ttl.caps { color:var(--c4); } .card.p4 ul li::before { background:var(--c4); }
-  .card.p5 .n, .card.p5 .ttl.caps { color:var(--c5); } .card.p5 ul li::before { background:var(--c5); }
-  .card.p6 .n, .card.p6 .ttl.caps { color:var(--c6); } .card.p6 ul li::before { background:var(--c6); }
-  @media (max-width:900px){ .cards.cols3 { grid-template-columns:1fr 1fr; } }
-  @media (max-width:680px){ .cards, .cards.cols3 { grid-template-columns:1fr; } }
-
-  .duo { display:grid; grid-template-columns:1fr 1fr; gap:0 32px; }
-  .duo h3 { font-size:15px; font-weight:600; margin-bottom:10px; text-transform:uppercase; letter-spacing:.06em; }
-  .duo ul { list-style:none; }
-  .duo li { font-size:15.5px; color:var(--txt2); line-height:1.5; padding:9px 0 9px 18px; border-bottom:1px solid var(--line); position:relative; }
-  .duo li::before { content:""; position:absolute; left:0; top:16px; width:7px; height:7px; border-radius:50%; }
-  .duo .a li::before { background:var(--c5); }
-  .duo .b li::before { background:var(--c4); }
-  .duo .a h3 { color:var(--c5); }
-  .duo .b h3 { color:var(--c4); }
-  @media (max-width:640px){ .duo { grid-template-columns:1fr; } }
-
-  ol.recs { counter-reset:r; list-style:none; display:flex; flex-direction:column; gap:12px; }
-  ol.recs li { counter-increment:r; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px 24px 20px 68px; position:relative; transition:border-color .25s; }
-  ol.recs li:hover { border-color:var(--line-strong); }
-  ol.recs li::before { content:counter(r); position:absolute; left:22px; top:22px; width:28px; height:28px;
-      border:1.5px solid var(--acc); color:var(--acc); border-radius:50%; font-size:14px; font-weight:600;
-      display:flex; align-items:center; justify-content:center; }
-  ol.recs li:nth-child(7n+1)::before { border-color:var(--c1); color:var(--c1); }
-  ol.recs li:nth-child(7n+2)::before { border-color:var(--c2); color:var(--c2); }
-  ol.recs li:nth-child(7n+3)::before { border-color:var(--c3); color:var(--c3); }
-  ol.recs li:nth-child(7n+4)::before { border-color:var(--c4); color:var(--c4); }
-  ol.recs li:nth-child(7n+5)::before { border-color:var(--c5); color:var(--c5); }
-  ol.recs li:nth-child(7n+6)::before { border-color:var(--c6); color:var(--c6); }
-  ol.recs li:nth-child(7n+7)::before { border-color:var(--c2); color:var(--c2); }
-  ol.recs b { font-weight:600; line-height:1.4; display:block; }
-  ol.recs b .ses { color:var(--mut); font-size:14px; font-weight:500; }
-  ol.recs p { color:var(--txt2); font-size:15.5px; line-height:1.6; margin-top:5px; }
-
-  /* интерактивный чеклист — отметки хранятся в localStorage */
-  .progress { display:flex; align-items:center; gap:14px; margin-bottom:22px; }
-  .progress .bar { flex:1; height:9px; background:var(--bar-track); border-radius:4px; overflow:hidden; }
-  .progress .bar i { display:block; height:100%; background:var(--acc); border-radius:4px; transition:width .25s; }
-  .progress .val { font-size:14px; color:var(--mut); font-variant-numeric:tabular-nums; white-space:nowrap; }
-  .check { list-style:none; border:1px solid var(--line); border-radius:14px; background:var(--card); padding:6px 26px; }
-  .check li { display:flex; align-items:flex-start; gap:14px; padding:12px 0; border-bottom:1px solid var(--line);
-              font-size:16px; color:var(--txt2); line-height:1.5; cursor:pointer; user-select:none; }
-  .check li:last-child { border-bottom:none; }
-  .check .box { flex-shrink:0; width:22px; height:22px; margin-top:3px; border:1.5px solid var(--acc); border-radius:6px;
-                display:flex; align-items:center; justify-content:center; transition:background .15s; }
-  .check .box svg { width:13px; height:13px; opacity:0; }
-  .check li.done .box { background:var(--acc); }
-  .check li.done .box svg { opacity:1; }
-  .check li.done { color:var(--mut); }
-  .check li.done span.t { text-decoration:line-through; text-decoration-color:var(--mut); }
-
-  .next { list-style:none; }
-  .next li { font-size:16px; color:var(--txt2); line-height:1.6; padding:10px 0 10px 20px; border-bottom:1px solid var(--line); position:relative; }
-  .next li:last-child { border-bottom:none; }
-  .next li::before { content:""; position:absolute; left:0; top:19px; width:7px; height:7px; border-radius:50%; background:var(--acc2); }
-  .next li:nth-child(5n+1)::before { background:var(--c1); }
-  .next li:nth-child(5n+2)::before { background:var(--c2); }
-  .next li:nth-child(5n+3)::before { background:var(--c4); }
-  .next li:nth-child(5n+4)::before { background:var(--c5); }
-  .next li:nth-child(5n+5)::before { background:var(--c3); }
-
-
-  /* --- интерактив: плавное появление секций --- */
-  section { opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease; }
-  section.lit { opacity:1; transform:none; }
-  @media (prefers-reduced-motion: reduce){ section { opacity:1; transform:none; transition:none; } }
-  /* --- индикатор прочтения сверху --- */
-  #readbar { position:fixed; top:0; left:0; height:3px; background:var(--acc2); width:0%; z-index:60; transition:width .1s linear; }
-  /* --- ховеры карточек в их собственном цвете --- */
-  .card.p1:hover { border-color:var(--c1); } .card.p2:hover { border-color:var(--c2); }
-  .card.p3:hover { border-color:var(--c3); } .card.p4:hover { border-color:var(--c4); }
-  .card.p5:hover { border-color:var(--c5); } .card.p6:hover { border-color:var(--c6); }
-  .card { transform:translateY(0); transition:border-color .25s, transform .25s; }
-  .card:hover { transform:translateY(-3px); }
-  /* --- активный раздел в оглавлении --- */
-  .toc a.on { color:var(--ink); font-weight:600; }
-  /* --- секция 08: библиотека скиллов --- */
-  .toc li:nth-child(8) .idx { color:var(--c3); }
+  /* памятка — 8 секций, восьмую подсвечиваем отдельно (не по общему циклу из 7 цветов) */
   #s08 .sec-head .idx { color:var(--c3); }
-  .repo { display:flex; align-items:center; gap:16px; border:1px solid var(--line); border-radius:14px; background:var(--card); padding:20px 24px; text-decoration:none; transition:border-color .25s, transform .25s; margin-bottom:22px; }
-  .repo:hover { border-color:var(--c3); transform:translateY(-3px); color:inherit; }
-  .repo .gh { width:34px; height:34px; flex-shrink:0; fill:var(--ink); }
-  .repo b { display:block; font-size:16.5px; color:var(--ink); }
-  .repo span { font-size:14px; color:var(--mut); }
-  .prompt { position:relative; border:1px solid var(--line); border-radius:14px; background:var(--card); padding:20px 24px; margin-top:22px; }
-  .prompt pre { font:14px/1.6 ui-monospace, "SF Mono", monospace; color:var(--txt2); white-space:pre-wrap; overflow-wrap:break-word; }
-  .prompt .copy { position:absolute; top:12px; right:12px; border:1px solid var(--line); background:var(--soft); color:var(--txt3);
-      font:13px "Golos Text", sans-serif; padding:5px 12px; border-radius:7px; cursor:pointer; transition:color .2s, border-color .2s; }
-  .prompt .copy:hover { color:var(--ink); border-color:var(--line-strong); }
-  .prompt .copy.ok { color:var(--acc); border-color:var(--acc); }
-
-  code { font:14px ui-monospace, "SF Mono", monospace; background:var(--soft); padding:1px 6px; border-radius:4px; }
-  /* ссылки всегда видны — цвет + подчёркивание */
-  a { color:var(--acc); text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:3px; text-decoration-color:var(--acc2); }
-  a:hover { color:var(--acc2); }
-  .toc a, .toc a:hover { text-decoration:none; }
-  .chip a { color:var(--ink); }
-  .foot { margin-top:84px; padding-top:22px; border-top:1px solid var(--line); font-size:13.5px; color:var(--mut); line-height:1.7; }
+  .toc li:nth-child(8) .idx { color:var(--c3); }
 </style>
 </head>
 <body>
 
 <div id="readbar"></div>
 
-<div class="theme" id="theme">
-  <button data-t="light">Light</button>
-  <button data-t="auto">Auto</button>
-  <button data-t="dark">Dark</button>
-</div>
-<script>
-(function(){
-  var root = document.documentElement, box = document.getElementById('theme');
-  function apply(t){
-    if(t==='auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', t);
-    localStorage.setItem('ainative-pamyatka-theme', t);
-    box.querySelectorAll('button').forEach(function(b){ b.classList.toggle('on', b.dataset.t===t); });
-  }
-  box.addEventListener('click', function(e){ if(e.target.dataset.t) apply(e.target.dataset.t); });
-  apply(localStorage.getItem('ainative-pamyatka-theme') || 'auto');
-})();
-</script>
+<header class="topnav">
+  <a class="brandmark" href="index.html">
+    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AI Native">
+      <rect x="0"  y="44" width="64" height="14" rx="7" fill="#e9c5a0"/>
+      <rect x="11" y="25" width="42" height="14" rx="7" fill="#f5c842"/>
+      <rect x="21" y="6"  width="22" height="14" rx="7" fill="#22c55e"/>
+    </svg>
+    <b>AI Native</b>
+  </a>
+  <nav class="navlinks">
+    <a href="index.html">Главная</a>
+    <a href="ai-native-in-brief.html">Кратко</a>
+    <a href="ai-native-principles.html">Принципы</a>
+    <a href="ai-native-personal-ai-os.html">Personal AI OS</a>
+    <a href="ai-native-knowledge-base-guide.html">База знаний</a>
+    <a href="ai-native-prompts.html">Промпты</a>
+    <a class="active" href="ai-native-memo.html">Памятка</a>
+  </nav>
+  <div class="theme" id="theme">
+    <button data-t="light">Light</button>
+    <button data-t="auto">Auto</button>
+    <button data-t="dark">Dark</button>
+  </div>
+</header>
 
 <div class="brand">
   <svg class="logo" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AI Native">
@@ -414,43 +250,6 @@ https://github.com/alexivanovvv/ai-native (папка SKILLS/content-pack).
 })();
 </script>
 
-
-<script>
-(function(){
-  // появление секций
-  var io = new IntersectionObserver(function(es){
-    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('lit'); io.unobserve(e.target); } });
-  }, {threshold:.12});
-  document.querySelectorAll('section').forEach(function(x){ io.observe(x); });
-  // индикатор прочтения
-  var bar = document.getElementById('readbar');
-  function upd(){
-    var h = document.documentElement;
-    var max = h.scrollHeight - h.clientHeight;
-    bar.style.width = (max > 0 ? (h.scrollTop / max * 100) : 0) + '%';
-  }
-  addEventListener('scroll', upd, {passive:true}); upd();
-  // подсветка активного раздела в оглавлении
-  var links = Array.from(document.querySelectorAll('.toc a'));
-  var spy = new IntersectionObserver(function(es){
-    es.forEach(function(e){
-      if(!e.isIntersecting) return;
-      var id = '#' + e.target.id;
-      links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href') === id); });
-    });
-  }, {rootMargin:'-20% 0px -70% 0px'});
-  document.querySelectorAll('section[id]').forEach(function(x){ spy.observe(x); });
-  // копирование промпта
-  var btn = document.getElementById('copyPrompt');
-  if(btn){
-    btn.addEventListener('click', function(){
-      navigator.clipboard.writeText(document.getElementById('promptText').textContent).then(function(){
-        btn.textContent = 'Скопировано ✓'; btn.classList.add('ok');
-        setTimeout(function(){ btn.textContent = 'Копировать'; btn.classList.remove('ok'); }, 2000);
-      });
-    });
-  }
-})();
-</script>
+<script src="site.js"></script>
 </body>
 </html>
