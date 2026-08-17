@@ -33,8 +33,8 @@ body { background:var(--bg); color:var(--ink); font:18px/1.65 "Golos Text", -app
 .topnav .brandmark svg { width:26px; height:26px; flex-shrink:0; }
 .topnav .brandmark b { font-family:"Fraunces", "Golos Text", serif; font-size:17px; font-weight:600; letter-spacing:-.01em; }
 .topnav .navlinks { display:flex; flex-wrap:wrap; gap:3px; align-items:center; }
-.topnav .navlinks a { font-family:"Barlow Condensed", "Golos Text", -apple-system, sans-serif; font-size:13px; font-weight:600;
-                       text-transform:uppercase; letter-spacing:.07em; color:var(--mut);
+.topnav .navlinks a { font-family:"PT Sans Narrow", "Golos Text", -apple-system, sans-serif; font-size:14px; font-weight:700;
+                       text-transform:uppercase; letter-spacing:.06em; color:var(--mut);
                        text-decoration:none; padding:9px 12px; border-radius:8px; transition:background .15s, color .15s; }
 .topnav .navlinks a:hover { color:var(--ink); background:var(--soft); }
 .topnav .navlinks a.active { color:var(--ink); background:var(--soft); }
