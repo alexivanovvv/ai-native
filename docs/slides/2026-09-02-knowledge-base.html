@@ -941,7 +941,7 @@
   let tx=null;
   document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX});
   document.addEventListener('touchend',e=>{if(tx===null)return;const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50){dx<0?next():prev()}tx=null});
-  document.getElementById('deck').addEventListener('click',e=>{if(e.target.closest('button'))return;if(e.clientX>window.innerWidth*.5)next();});
+  document.getElementById('deck').addEventListener('click',e=>{if(e.target.closest('button,a'))return;if(e.clientX>window.innerWidth*.5)next();});
   const _h=location.hash.match(/^#slide-(\d+)$/);
   if(_h)i=Math.max(0,Math.min(total-1,parseInt(_h[1])-1));
   window.addEventListener('hashchange',()=>{const _m=location.hash.match(/^#slide-(\d+)$/);if(_m){i=Math.max(0,Math.min(total-1,parseInt(_m[1])-1));render();}});
