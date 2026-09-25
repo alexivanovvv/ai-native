@@ -16,6 +16,7 @@ The site is served from the `docs/` folder, and the root `index.html` redirects 
 | `docs/ai-native-knowledge-base-guide.html` | How to build and fill a knowledge base | Use it when you want practical sourcing and curation guidance |
 | `docs/ai-native-prompts.html` | Reusable prompt templates | Use it when you want ready-to-use prompts for repeat tasks |
 | `docs/ai-native-memo.html` | Participant memo: principles, PersonalOS, interactive checklist, catch-up plan | Use it after the course to recall the essentials or catch up step by step |
+| `docs/slides/2026-09-25-stream.html` | Slides from the 25 Sep 2026 stream: AI Native levels, knowledge base, personal CRM demo, intensive offer | Use it to revisit the stream or share the deck |
 
 ## Shared asset
 
