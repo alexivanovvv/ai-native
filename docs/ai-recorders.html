@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-рекордеры 2026 — альтернативы Plaud</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:wght@400;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #09080a;
+    --surface: #111013;
+    --card: #17151a;
+    --card-hover: #1e1b22;
+    --border: #2c2830;
+    --border-light: #3d3845;
+    --amber: #d4941a;
+    --amber-light: #f0b535;
+    --amber-dim: #8a5f10;
+    --cream: #ede5d8;
+    --cream-dim: #9a9090;
+    --cream-muted: #5a5458;
+    --green: #2eb87a;
+    --green-dim: #1a6644;
+    --red: #c44040;
+    --red-dim: #6a2020;
+    --blue: #4a8fd4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(212,148,26,0.08) 0%, transparent 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+
+  /* ── HEADER ── */
+  header { border-bottom: 1px solid var(--border); padding: 3rem 0 4rem; animation: fadeUp 0.6s ease both; }
+  .header-inner { display: flex; flex-direction: column; gap: 1.5rem; }
+  .eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    color: var(--amber);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .eyebrow::before { content: ''; display: block; width: 2rem; height: 1px; background: var(--amber); }
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    color: var(--cream);
+  }
+  h1 em { font-style: italic; color: var(--amber); }
+  .header-meta { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+  .subtitle { font-size: 1rem; color: var(--cream-dim); max-width: 520px; line-height: 1.6; font-weight: 300; }
+  .header-stats { display: flex; gap: 2rem; flex-shrink: 0; }
+  .stat { text-align: right; }
+  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: var(--amber-light); display: block; line-height: 1; }
+  .stat-label { font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 0.12em; color: var(--cream-muted); text-transform: uppercase; }
+
+  /* ── LEGEND ── */
+  .legend { display: flex; gap: 1.5rem; padding: 1.2rem 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 0.5rem; font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.08em; color: var(--cream-dim); text-transform: uppercase; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dot-best { background: var(--amber); }
+  .dot-open { background: var(--green); }
+  .dot-neutral { background: var(--blue); }
+
+  /* ── SECTION LABEL ── */
+  .section-label { padding: 3rem 0 2rem; display: flex; align-items: center; gap: 1.5rem; }
+  .section-label h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 300; letter-spacing: 0.02em; color: var(--cream); }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ── PRODUCT GRID ── */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 1px; }
+
+  /* ── PRODUCT CARD ── */
+  .card {
+    background: var(--card);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.5s ease both;
+    text-decoration: none;
+    color: inherit;
+  }
+  .card:hover { background: var(--card-hover); }
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.1s; }
+  .card:nth-child(3) { animation-delay: 0.15s; }
+  .card:nth-child(4) { animation-delay: 0.2s; }
+  .card:nth-child(5) { animation-delay: 0.25s; }
+  .card:nth-child(6) { animation-delay: 0.3s; }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: transparent;
+  }
+  .card.best::before { background: var(--amber); }
+  .card.open-src::before { background: var(--green); }
+
+  /* ── PRODUCT IMAGE ── */
+  .card-img {
+    height: 200px;
+    background: #0f0d12;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    padding: 1.2rem;
+    transition: transform 0.4s ease;
+    filter: drop-shadow(0 4px 24px rgba(0,0,0,0.6));
+  }
+  .card:hover .card-img img { transform: scale(1.04); }
+
+  /* ── CARD BODY ── */
+  .card-body { padding: 1.6rem 2rem; display: flex; flex-direction: column; gap: 1.2rem; flex: 1; }
+
+  /* Badges */
+  .badges { display: flex; gap: 0.4rem; flex-wrap: wrap; min-height: 22px; }
+  .badge { font-family: 'Space Mono', monospace; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.25rem 0.6rem; border-radius: 2px; }
+  .badge-amber { background: rgba(212,148,26,0.15); color: var(--amber-light); border: 1px solid var(--amber-dim); }
+  .badge-green { background: rgba(46,184,122,0.12); color: var(--green); border: 1px solid var(--green-dim); }
+  .badge-blue { background: rgba(74,143,212,0.12); color: var(--blue); border: 1px solid rgba(74,143,212,0.3); }
+  .badge-gray { background: rgba(90,84,88,0.2); color: var(--cream-dim); border: 1px solid var(--cream-muted); }
+
+  /* Names */
+  .card-name { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 400; line-height: 1; color: var(--cream); }
+  .card-name a { color: inherit; text-decoration: none; }
+  .card-name a:hover { color: var(--amber-light); }
+  .card-name span.brand-prefix { color: var(--amber); font-style: italic; }
+  .card-brand { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; color: var(--cream-dim); text-transform: uppercase; margin-top: 0.35rem; }
+  .card-brand a { color: var(--cream-dim); text-decoration: none; border-bottom: 1px solid var(--border-light); }
+  .card-brand a:hover { color: var(--amber); border-bottom-color: var(--amber-dim); }
+  .card-desc { font-size: 0.88rem; line-height: 1.6; color: var(--cream-dim); font-weight: 300; }
+
+  /* Specs */
+  .specs { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; background: rgba(0,0,0,0.2); border: 1px solid var(--border); padding: 1rem; border-radius: 2px; }
+  .spec-item { display: flex; flex-direction: column; gap: 0.2rem; }
+  .spec-val { font-family: 'Space Mono', monospace; font-size: 0.85rem; color: var(--cream); font-weight: 700; }
+  .spec-key { font-family: 'Space Mono', monospace; font-size: 0.56rem; letter-spacing: 0.1em; color: var(--cream-muted); text-transform: uppercase; }
+
+  /* Pricing */
+  .pricing { display: flex; align-items: baseline; gap: 0.8rem; flex-wrap: wrap; }
+  .price-device { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 600; color: var(--amber-light); line-height: 1; }
+  .price-sub { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--cream-dim); letter-spacing: 0.04em; }
+  .price-free { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--green); letter-spacing: 0.04em; }
+
+  /* Pros/cons */
+  .pros-cons { display: flex; flex-direction: column; gap: 0.4rem; }
+  .pro, .con { font-size: 0.82rem; color: var(--cream-dim); display: flex; gap: 0.6rem; align-items: baseline; line-height: 1.45; }
+  .pro::before { content: '+'; font-family: 'Space Mono', monospace; font-size: 0.75rem; color: var(--green); flex-shrink: 0; font-weight: 700; }
+  .con::before { content: '−'; font-family: 'Space Mono', monospace; font-size: 0.75rem; color: var(--red); flex-shrink: 0; font-weight: 700; }
+
+  /* CTA link */
+  .card-cta {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--amber);
+    text-decoration: none;
+    padding: 0.7rem 0;
+    border-top: 1px solid var(--border);
+    transition: color 0.2s;
+  }
+  .card-cta:hover { color: var(--amber-light); }
+  .card-cta::after { content: '→'; transition: transform 0.2s; }
+  .card:hover .card-cta::after { transform: translateX(4px); }
+
+  /* ── TABLE ── */
+  .table-section { padding: 0 0 4rem; }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; min-width: 860px; }
+  thead tr { background: var(--surface); border-bottom: 2px solid var(--border-light); }
+  th { padding: 1rem 1.2rem; text-align: left; font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cream-dim); font-weight: 400; white-space: nowrap; }
+  th:first-child { color: var(--cream); }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  tbody tr:hover { background: var(--surface); }
+  td { padding: 0.9rem 1.2rem; color: var(--cream-dim); vertical-align: middle; }
+  td:first-child { color: var(--cream); font-weight: 500; white-space: nowrap; }
+  td.mono { font-family: 'Space Mono', monospace; font-size: 0.75rem; }
+  .check { color: var(--green); font-weight: 700; }
+  .cross { color: var(--red); }
+  .partial { color: var(--amber); }
+  .price-cell { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--amber-light); }
+  tbody tr.winner td:first-child::before { content: '★ '; color: var(--amber); }
+
+  td a { color: var(--amber); text-decoration: none; font-family: 'Space Mono', monospace; font-size: 0.7rem; }
+  td a:hover { color: var(--amber-light); text-decoration: underline; }
+
+  /* ── DISCLAIMER ── */
+  .disclaimer { border-top: 1px solid var(--border); padding: 2rem 0; font-family: 'Space Mono', monospace; font-size: 0.62rem; color: var(--cream-muted); letter-spacing: 0.06em; line-height: 1.8; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 700px) {
+    .grid { grid-template-columns: 1fr; }
+    .header-stats { flex-wrap: wrap; gap: 1rem; }
+    .stat { text-align: left; }
+    h1 { font-size: 2.8rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <div class="eyebrow">AI-рекордеры · Обзор 2026</div>
+      <h1>Оффлайн-запись<br>и <em>AI-обработка</em><br>разговоров</h1>
+      <div class="header-meta">
+        <p class="subtitle">
+          Устройства, которые записывают живые встречи и обрабатывают их через AI —
+          транскрипция, саммари, память. Альтернативы Plaud Note для тех,
+          кто думает о памяти и продуктивности.
+        </p>
+        <div class="header-stats">
+          <div class="stat">
+            <span class="stat-num">6</span>
+            <span class="stat-label">устройств</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">$49</span>
+            <span class="stat-label">min цена</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">150+</span>
+            <span class="stat-label">языков max</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-item"><div class="dot dot-best"></div> Лучший в категории</div>
+    <div class="legend-item"><div class="dot dot-open"></div> Open source</div>
+    <div class="legend-item"><div class="dot dot-neutral"></div> Lifestyle / Мультифункция</div>
+  </div>
+
+  <!-- PRODUCTS -->
+  <div class="section-label">
+    <h2>Актуальные устройства</h2>
+  </div>
+
+  <div class="grid">
+
+    <!-- PLAUD NOTE PRO -->
+    <div class="card best">
+      <div class="card-img">
+        <img src="https://www.plaud.ai/cdn/shop/files/NotePro-_-2_fdc31980-a483-420d-b385-3723c698c9b7.png" alt="Plaud Note Pro" loading="lazy">
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="badges">
+            <span class="badge badge-amber">★ Лучшее качество</span>
+            <span class="badge badge-amber">Топ-пик</span>
+          </div>
+          <div class="card-name"><a href="https://www.plaud.ai/products/plaud-note-pro" target="_blank" rel="noopener"><span class="brand-prefix">Plaud</span> Note Pro</a></div>
+          <div class="card-brand"><a href="https://www.plaud.ai/products/plaud-note-pro" target="_blank" rel="noopener">plaud.ai ↗</a></div>
+        </div>
+        <p class="card-desc">
+          Флагман линейки — ультратонкая карточка 9мм с 4 MEMS-микрофонами и VPU-чипом.
+          Записывает встречи, звонки и лекции. Встроенный дисплей InstantView.
+        </p>
+        <div class="specs">
+          <div class="spec-item"><span class="spec-val">30 ч</span><span class="spec-key">Запись</span></div>
+          <div class="spec-item"><span class="spec-val">64 ГБ</span><span class="spec-key">Хранение</span></div>
+          <div class="spec-item"><span class="spec-val">112</span><span class="spec-key">Языков</span></div>
+          <div class="spec-item"><span class="spec-val">5 м</span><span class="spec-key">Радиус</span></div>
+        </div>
+        <div class="pricing">
+          <span class="price-device">$189</span>
+          <div>
+            <div class="price-sub">+ подписка: от $8.34/мес</div>
+            <div class="price-free">Free: 300 мин/мес</div>
+          </div>
+        </div>
+        <div class="pros-cons">
+          <div class="pro">Лучший массив микрофонов на рынке</div>
+          <div class="pro">Дисплей — саммари прямо на устройстве</div>
+          <div class="pro">112 языков, разметка спикеров</div>
+          <div class="con">Дорого; подписка нужна при интенсивном use</div>
+          <div class="con">Карточка — не носится как украшение</div>
+        </div>
+        <a class="card-cta" href="https://www.plaud.ai/products/plaud-note-pro" target="_blank" rel="noopener">Смотреть на plaud.ai</a>
+      </div>
+    </div>
+
+    <!-- PLAUD NOTEPIN -->
+    <div class="card best">
+      <div class="card-img">
+        <img src="https://www.plaud.ai/cdn/shop/files/plaud-notepin-gray-0225.webp?v=1774430287" alt="Plaud NotePin" loading="lazy">
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="badges">
+            <span class="badge badge-amber">Wearable</span>
+            <span class="badge badge-gray">Plaud</span>
+          </div>
+          <div class="card-name"><a href="https://www.plaud.ai/products/plaud-notepin" target="_blank" rel="noopener"><span class="brand-prefix">Plaud</span> NotePin</a></div>
+          <div class="card-brand"><a href="https://www.plaud.ai/products/plaud-notepin" target="_blank" rel="noopener">plaud.ai ↗</a></div>
+        </div>
+        <p class="card-desc">
+          Носимая версия Plaud — значок-пин для пиджака или лацкана. Те же AI-функции,
+          но в форм-факторе броши. Идеален для конференций и встреч.
+        </p>
+        <div class="specs">
+          <div class="spec-item"><span class="spec-val">20 ч</span><span class="spec-key">Запись</span></div>
+          <div class="spec-item"><span class="spec-val">32 ГБ</span><span class="spec-key">Хранение</span></div>
+          <div class="spec-item"><span class="spec-val">112</span><span class="spec-key">Языков</span></div>
+          <div class="spec-item"><span class="spec-val">Pin</span><span class="spec-key">Носится</span></div>
+        </div>
+        <div class="pricing">
+          <span class="price-device">$159</span>
+          <div>
+            <div class="price-sub">+ подписка: от $8.34/мес</div>
+            <div class="price-free">Free: 300 мин/мес</div>
+          </div>
+        </div>
+        <div class="pros-cons">
+          <div class="pro">Носится — не нужно держать в руках</div>
+          <div class="pro">Весь AI Plaud: саммари, шаблоны, CRM</div>
+          <div class="con">Меньше батарея, чем у Note Pro</div>
+          <div class="con">Та же подписочная модель</div>
+        </div>
+        <a class="card-cta" href="https://www.plaud.ai/products/plaud-notepin" target="_blank" rel="noopener">Смотреть на plaud.ai</a>
+      </div>
+    </div>
+
+    <!-- OMI AI -->
+    <div class="card open-src">
+      <div class="card-img">
+        <img src="https://www.omi.me/cdn/shop/files/Copy_of_Front_Glow_NoBG.png?v=1768511543&width=600" alt="Omi AI" loading="lazy">
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="badges">
+            <span class="badge badge-green">★ Open Source</span>
+            <span class="badge badge-green">Лучшая цена</span>
+          </div>
+          <div class="card-name"><a href="https://www.omi.me/products/omi" target="_blank" rel="noopener"><span class="brand-prefix">Omi</span> AI</a></div>
+          <div class="card-brand"><a href="https://www.omi.me/products/omi" target="_blank" rel="noopener">Based Hardware · omi.me ↗</a></div>
+        </div>
+        <p class="card-desc">
+          Открытый AI-рекордер — железо и софт в открытом доступе. Алюминиевый диск
+          2.5 см, носится как кулон или на запястье. Bluetooth-стриминг на телефон,
+          64 ГБ памяти. Подключается к любой LLM через свой API-ключ.
+        </p>
+        <div class="specs">
+          <div class="spec-item"><span class="spec-val">30 ч</span><span class="spec-key">Батарея</span></div>
+          <div class="spec-item"><span class="spec-val">64 ГБ</span><span class="spec-key">Хранение</span></div>
+          <div class="spec-item"><span class="spec-val">∞</span><span class="spec-key">Языков (Whisper)</span></div>
+          <div class="spec-item"><span class="spec-val">BT 5</span><span class="spec-key">Стриминг</span></div>
+        </div>
+        <div class="pricing">
+          <span class="price-device">$179</span>
+          <div>
+            <div class="price-free">Подписка: бесплатно</div>
+            <div class="price-sub">1200 мин/мес cloud или свой API</div>
+          </div>
+        </div>
+        <div class="pros-cons">
+          <div class="pro">Самый дешёвый и открытый — нет vendor lock-in</div>
+          <div class="pro">Свои API-ключи → полный контроль над данными</div>
+          <div class="pro">Плагины: ChatGPT, Notion, Obsidian</div>
+          <div class="con">Менее полированный UX, DIY-ощущение</div>
+          <div class="con">Реалтайм-транскрипция требует близость к телефону</div>
+        </div>
+        <a class="card-cta" href="https://www.omi.me/products/omi" target="_blank" rel="noopener">Смотреть на omi.me</a>
+      </div>
+    </div>
+
+    <!-- SOUNDCORE WORK -->
+    <div class="card">
+      <div class="card-img">
+        <img src="https://cdn.shopify.com/s/files/1/0516/3761/6830/files/Group_2147226972_3840x.png?v=1776683440" alt="Soundcore Work" loading="lazy">
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="badges">
+            <span class="badge badge-blue">★ Компактнее всех</span>
+            <span class="badge badge-gray">Anker</span>
+          </div>
+          <div class="card-name"><a href="https://www.soundcore.com/products/d3200-soundcore-work-ai-voice-recorder" target="_blank" rel="noopener"><span class="brand-prefix">Soundcore</span> Work</a></div>
+          <div class="card-brand"><a href="https://www.soundcore.com/products/d3200-soundcore-work-ai-voice-recorder" target="_blank" rel="noopener">by Anker · soundcore.com ↗</a></div>
+        </div>
+        <p class="card-desc">
+          Монета размером 2.3 см, весит 10 грамм — самый маленький рекордер в обзоре.
+          Двойной микрофон, 97% точность транскрипции, 150+ языков. В комплекте
+          цепочка-кулон и магнитное кольцо.
+        </p>
+        <div class="specs">
+          <div class="spec-item"><span class="spec-val">8 ч</span><span class="spec-key">Запись</span></div>
+          <div class="spec-item"><span class="spec-val">8 ГБ</span><span class="spec-key">Хранение</span></div>
+          <div class="spec-item"><span class="spec-val">150+</span><span class="spec-key">Языков</span></div>
+          <div class="spec-item"><span class="spec-val">10 мин</span><span class="spec-key">Заряд = 2 ч</span></div>
+        </div>
+        <div class="pricing">
+          <span class="price-device">$159</span>
+          <div>
+            <div class="price-sub">+ подписка: от $15.99/мес</div>
+            <div class="price-free">Free: 600 мин включено</div>
+          </div>
+        </div>
+        <div class="pros-cons">
+          <div class="pro">Размер монеты — буквально незаметен</div>
+          <div class="pro">Быстрая зарядка: 10 мин = 2 часа работы</div>
+          <div class="pro">150+ языков — больше всех в обзоре</div>
+          <div class="con">Только 8 часов записи (меньше всех)</div>
+          <div class="con">Накопитель 8 ГБ — заполнится быстро</div>
+        </div>
+        <a class="card-cta" href="https://www.soundcore.com/products/d3200-soundcore-work-ai-voice-recorder" target="_blank" rel="noopener">Смотреть на soundcore.com</a>
+      </div>
+    </div>
+
+    <!-- BEE AI -->
+    <div class="card">
+      <div class="card-img">
+        <img src="https://cdn.prod.website-files.com/66fa553073ee1d0460bdc3d1/679a366631e9cbc4f636e319_close-up.webp" alt="Bee AI Pendant" loading="lazy">
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="badges">
+            <span class="badge badge-amber">★ Мин. цена</span>
+            <span class="badge badge-gray">Wearable</span>
+          </div>
+          <div class="card-name"><a href="https://bee.computer/bee-pioneer" target="_blank" rel="noopener"><span class="brand-prefix">Bee</span> AI Pendant</a></div>
+          <div class="card-brand"><a href="https://bee.computer/bee-pioneer" target="_blank" rel="noopener">Bee Computer · bee.computer ↗</a></div>
+        </div>
+        <p class="card-desc">
+          Самый доступный по цене кулон-рекордер. Работает в паре со смартфоном,
+          записывает разговоры постоянно, строит AI-память. iOS-приложение обязательно.
+        </p>
+        <div class="specs">
+          <div class="spec-item"><span class="spec-val">∞</span><span class="spec-key">Запись (телефон)</span></div>
+          <div class="spec-item"><span class="spec-val">Cloud</span><span class="spec-key">Хранение</span></div>
+          <div class="spec-item"><span class="spec-val">iOS</span><span class="spec-key">Требует</span></div>
+          <div class="spec-item"><span class="spec-val">Always</span><span class="spec-key">Режим</span></div>
+        </div>
+        <div class="pricing">
+          <span class="price-device">$49</span>
+          <div>
+            <div class="price-sub">Подписка: $19/мес — обязательна</div>
+            <div class="price-sub">Итого: ~$277/год</div>
+          </div>
+        </div>
+        <div class="pros-cons">
+          <div class="pro">Самая низкая цена входа ($49)</div>
+          <div class="pro">Always-on запись в фоне</div>
+          <div class="con">Подписка обязательна — без неё бесполезен</div>
+          <div class="con">Зависит от телефона и его батареи</div>
+          <div class="con">Меньше зрелости экосистемы</div>
+        </div>
+        <a class="card-cta" href="https://bee.computer/bee-pioneer" target="_blank" rel="noopener">Смотреть на bee.computer</a>
+      </div>
+    </div>
+
+    <!-- RAY-BAN META -->
+    <div class="card">
+      <div class="card-img">
+        <img src="https://lookaside.fbsbx.com/elementpath/media/?media_id=1556964719066752&version=1776971541&transcode_extension=webp" alt="Ray-Ban Meta AI Glasses" loading="lazy">
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="badges">
+            <span class="badge badge-blue">Smart Glasses</span>
+            <span class="badge badge-blue">Live Translation</span>
+          </div>
+          <div class="card-name"><a href="https://www.ray-ban.com/usa/ray-ban-meta-ai-glasses" target="_blank" rel="noopener"><span class="brand-prefix">Ray-Ban</span> Meta Glasses</a></div>
+          <div class="card-brand"><a href="https://www.ray-ban.com/usa/ray-ban-meta-ai-glasses" target="_blank" rel="noopener">Ray-Ban × Meta · ray-ban.com ↗</a></div>
+        </div>
+        <p class="card-desc">
+          Смарт-очки с 6-микрофонным массивом и Meta AI. Оффлайн-переводчик на 6 языков
+          без интернета, живые субтитры. Видеозапись 3К. Не замена рекордеру —
+          мультифункциональный лайфстайл-гаджет.
+        </p>
+        <div class="specs">
+          <div class="spec-item"><span class="spec-val">5 ч</span><span class="spec-key">Аудио</span></div>
+          <div class="spec-item"><span class="spec-val">3К</span><span class="spec-key">Видео</span></div>
+          <div class="spec-item"><span class="spec-val">6</span><span class="spec-key">Офлайн-языков</span></div>
+          <div class="spec-item"><span class="spec-val">6 mic</span><span class="spec-key">Микрофонов</span></div>
+        </div>
+        <div class="pricing">
+          <span class="price-device">$379+</span>
+          <div>
+            <div class="price-sub">Meta AI: базово бесплатно</div>
+            <div class="price-sub">+ стоимость оправы</div>
+          </div>
+        </div>
+        <div class="pros-cons">
+          <div class="pro">Естественный форм-фактор — просто носишь очки</div>
+          <div class="pro">Офлайн-перевод на 6 языков в реальном времени</div>
+          <div class="pro">Фото и видео без достать телефон</div>
+          <div class="con">Не специализированный рекордер — AI-функции ограничены</div>
+          <div class="con">Зависимость от экосистемы Meta</div>
+        </div>
+        <a class="card-cta" href="https://www.ray-ban.com/usa/ray-ban-meta-ai-glasses" target="_blank" rel="noopener">Смотреть на ray-ban.com</a>
+      </div>
+    </div>
+
+  </div><!-- /grid -->
+
+  <!-- COMPARISON TABLE -->
+  <div class="section-label" style="margin-top: 3rem;">
+    <h2>Сравнительная таблица</h2>
+  </div>
+
+  <div class="table-section">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Устройство</th>
+            <th>Форм-фактор</th>
+            <th>Цена</th>
+            <th>Подписка</th>
+            <th>Запись</th>
+            <th>Хранение</th>
+            <th>Языков</th>
+            <th>Офлайн AI</th>
+            <th>Open Source</th>
+            <th>Ссылка</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="winner">
+            <td><a href="https://www.plaud.ai/products/plaud-note-pro" target="_blank" rel="noopener" style="color:var(--cream);text-decoration:none;border-bottom:1px solid var(--border-light)">Plaud Note Pro</a></td>
+            <td>Карточка (9мм)</td>
+            <td class="price-cell">$189</td>
+            <td class="mono">$8.34/мес</td>
+            <td class="mono">30 ч</td>
+            <td class="mono">64 ГБ</td>
+            <td class="mono">112</td>
+            <td class="partial">Гибрид</td>
+            <td class="cross">✕</td>
+            <td><a href="https://www.plaud.ai/products/plaud-note-pro" target="_blank" rel="noopener">plaud.ai ↗</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://www.plaud.ai/products/plaud-notepin" target="_blank" rel="noopener" style="color:var(--cream);text-decoration:none;border-bottom:1px solid var(--border-light)">Plaud NotePin</a></td>
+            <td>Значок-пин</td>
+            <td class="price-cell">$159</td>
+            <td class="mono">$8.34/мес</td>
+            <td class="mono">20 ч</td>
+            <td class="mono">32 ГБ</td>
+            <td class="mono">112</td>
+            <td class="partial">Гибрид</td>
+            <td class="cross">✕</td>
+            <td><a href="https://www.plaud.ai/products/plaud-notepin" target="_blank" rel="noopener">plaud.ai ↗</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://www.omi.me/products/omi" target="_blank" rel="noopener" style="color:var(--cream);text-decoration:none;border-bottom:1px solid var(--border-light)">Omi AI</a></td>
+            <td>Кулон (2.5 см)</td>
+            <td class="price-cell">$179</td>
+            <td class="mono check">Бесплатно</td>
+            <td class="mono">30 ч</td>
+            <td class="mono">64 ГБ</td>
+            <td class="mono">~100+</td>
+            <td class="check">✓ Whisper</td>
+            <td class="check">✓</td>
+            <td><a href="https://www.omi.me/products/omi" target="_blank" rel="noopener">omi.me ↗</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://www.soundcore.com/products/d3200-soundcore-work-ai-voice-recorder" target="_blank" rel="noopener" style="color:var(--cream);text-decoration:none;border-bottom:1px solid var(--border-light)">Soundcore Work</a></td>
+            <td>Монета (2.3 см)</td>
+            <td class="price-cell">$159</td>
+            <td class="mono">$15.99/мес</td>
+            <td class="mono">8 ч</td>
+            <td class="mono">8 ГБ</td>
+            <td class="mono">150+</td>
+            <td class="partial">Гибрид</td>
+            <td class="cross">✕</td>
+            <td><a href="https://www.soundcore.com/products/d3200-soundcore-work-ai-voice-recorder" target="_blank" rel="noopener">soundcore.com ↗</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://bee.computer/bee-pioneer" target="_blank" rel="noopener" style="color:var(--cream);text-decoration:none;border-bottom:1px solid var(--border-light)">Bee AI</a></td>
+            <td>Кулон</td>
+            <td class="price-cell">$49</td>
+            <td class="mono">$19/мес ⚠</td>
+            <td class="mono">Always</td>
+            <td class="mono">Cloud</td>
+            <td class="mono">Ограничено</td>
+            <td class="cross">Cloud only</td>
+            <td class="cross">✕</td>
+            <td><a href="https://bee.computer/bee-pioneer" target="_blank" rel="noopener">bee.computer ↗</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://www.ray-ban.com/usa/ray-ban-meta-ai-glasses" target="_blank" rel="noopener" style="color:var(--cream);text-decoration:none;border-bottom:1px solid var(--border-light)">Ray-Ban Meta</a></td>
+            <td>Очки</td>
+            <td class="price-cell">$379+</td>
+            <td class="mono check">Базово ∅</td>
+            <td class="mono">5 ч аудио</td>
+            <td class="mono">Cloud</td>
+            <td class="mono">6 офлайн</td>
+            <td class="check">✓ перевод</td>
+            <td class="cross">✕</td>
+            <td><a href="https://www.ray-ban.com/usa/ray-ban-meta-ai-glasses" target="_blank" rel="noopener">ray-ban.com ↗</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- WINNER SUMMARY -->
+  <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 3rem;">
+    <div style="background: var(--card); padding: 1.5rem;">
+      <div style="font-family:'Space Mono',monospace; font-size:0.58rem; letter-spacing:0.14em; color:var(--amber); text-transform:uppercase; margin-bottom:0.6rem;">Лучшее качество записи</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--cream);">Plaud Note Pro</div>
+      <div style="font-size:0.8rem; color:var(--cream-dim); margin-top:0.3rem;">4 MEMS + VPU, 30 ч, InstantView дисплей</div>
+    </div>
+    <div style="background: var(--card); padding: 1.5rem;">
+      <div style="font-family:'Space Mono',monospace; font-size:0.58rem; letter-spacing:0.14em; color:var(--green); text-transform:uppercase; margin-bottom:0.6rem;">Лучшая цена / открытость</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--cream);">Omi AI</div>
+      <div style="font-size:0.8rem; color:var(--cream-dim); margin-top:0.3rem;">$89, open source, нет vendor lock-in</div>
+    </div>
+    <div style="background: var(--card); padding: 1.5rem;">
+      <div style="font-family:'Space Mono',monospace; font-size:0.58rem; letter-spacing:0.14em; color:var(--blue); text-transform:uppercase; margin-bottom:0.6rem;">Самый компактный</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--cream);">Soundcore Work</div>
+      <div style="font-size:0.8rem; color:var(--cream-dim); margin-top:0.3rem;">Размер монеты, 150+ языков, быстрая зарядка</div>
+    </div>
+    <div style="background: var(--card); padding: 1.5rem;">
+      <div style="font-family:'Space Mono',monospace; font-size:0.58rem; letter-spacing:0.14em; color:var(--cream-muted); text-transform:uppercase; margin-bottom:0.6rem;">Мультифункция</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--cream);">Ray-Ban Meta</div>
+      <div style="font-size:0.8rem; color:var(--cream-dim); margin-top:0.3rem;">Очки + AI + офлайн-перевод + видео</div>
+    </div>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="disclaimer">
+    <p>Цены актуальны на июнь 2026 и могут меняться. Данные о времени записи, хранении и подписках — по открытым источникам производителей.<br>
+    «Офлайн AI» = обработка без интернета (частично или полностью). Большинство устройств используют гибридную модель.</p>
+  </div>
+
+</div><!-- /wrap -->
+</body>
+</html>
