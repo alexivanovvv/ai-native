@@ -26,7 +26,8 @@ body { background:var(--bg); color:var(--ink); font:18px/1.65 "Golos Text", -app
 /* --- индикатор прочтения сверху --- */
 #readbar { position:fixed; top:0; left:0; height:3px; background:var(--acc2); width:0%; z-index:60; transition:width .1s linear; }
 
-/* --- верхняя кросс-страничная навигация, во всю ширину экрана --- */
+/* --- кросс-страничная навигация: вертикальный сайдбар слева (>=900px), верхняя панель с бургером (<900px) --- */
+:root { --side:260px; }
 .topnav { width:100%; position:sticky; top:0; z-index:50; background:var(--bg); border-bottom:1px solid var(--line); }
 .topnav-inner { max-width:1240px; margin:0 auto; padding:18px 40px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px 22px; }
 .topnav .brandmark { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--ink); }
@@ -38,13 +39,41 @@ body { background:var(--bg); color:var(--ink); font:18px/1.65 "Golos Text", -app
                        text-decoration:none; padding:9px 12px; border-radius:8px; transition:background .15s, color .15s; }
 .topnav .navlinks a:hover { color:var(--ink); background:var(--soft); }
 .topnav .navlinks a.active { color:var(--ink); background:var(--soft); }
+/* подпункты текущей страницы (якоря секций, строятся в site.js) */
+.topnav .navsub { display:flex; flex-direction:column; gap:1px; margin:4px 0 8px 14px; padding-left:10px; border-left:1px solid var(--line); }
+.topnav .navsub a { font-family:"Golos Text", -apple-system, sans-serif; font-size:14px; font-weight:400; text-transform:none; letter-spacing:0;
+                    color:var(--mut); padding:5px 10px; line-height:1.35; }
+.topnav .navsub a:hover { background:none; color:var(--ink); }
+.topnav .navsub a.on { color:var(--ink); font-weight:600; background:none; }
+.navtoggle { display:none; align-items:center; justify-content:center; width:38px; height:38px; border:1px solid var(--line); border-radius:8px;
+             background:none; color:var(--ink); cursor:pointer; margin-left:auto; }
+.navtoggle svg { width:18px; height:18px; display:block; }
 .theme { display:flex; gap:2px; border:1px solid var(--line); border-radius:8px; padding:2px; flex-shrink:0; }
 .theme button { display:flex; align-items:center; justify-content:center; border:none; background:none; color:var(--mut);
                 padding:6px; border-radius:6px; cursor:pointer; transition:background .15s, color .15s; }
 .theme button svg { width:15px; height:15px; display:block; }
 .theme button.on { background:var(--soft); color:var(--ink); }
 .theme button:hover { color:var(--ink); }
-@media (max-width:640px){ .topnav-inner { padding:16px 20px; } }
+
+@media (min-width:900px){
+  body { padding-left:var(--side); }
+  .topnav { position:fixed; top:0; left:0; bottom:0; width:var(--side); border-bottom:none; border-right:1px solid var(--line); overflow-y:auto; }
+  .topnav-inner { max-width:none; height:100%; padding:30px 18px 24px; flex-direction:column; flex-wrap:nowrap; align-items:stretch; justify-content:flex-start; gap:26px; }
+  .topnav .brandmark { padding:0 12px; }
+  .topnav .navlinks { flex-direction:column; flex-wrap:nowrap; align-items:stretch; gap:2px; }
+  .topnav .navlinks > a { display:block; }
+  .theme { margin-top:auto; align-self:flex-start; margin-left:12px; }
+}
+@media (max-width:899.98px){
+  .topnav-inner { padding:14px 22px; flex-wrap:nowrap; }
+  .topnav.js .navtoggle { display:flex; }
+  .topnav.js .navlinks { display:none; }
+  .topnav.js.open .topnav-inner { flex-wrap:wrap; }
+  .topnav.js.open .navlinks { display:flex; flex-direction:column; align-items:stretch; flex-wrap:nowrap; order:3; width:100%;
+                               max-height:calc(100vh - 80px); overflow-y:auto; padding-bottom:6px; }
+  .topnav.js.open .navlinks > a { display:block; }
+  section { scroll-margin-top:84px; }
+}
 
 /* --- контентная колонка --- */
 .content { max-width:900px; margin:0 auto; padding:64px 36px 120px; }

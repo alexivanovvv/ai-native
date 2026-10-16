@@ -1,5 +1,7 @@
 # AI Native
 
+> **Деплой:** GitHub Pages из папки `docs/` ветки `main` (`git push`) — можно выкатить версию по запросу. **Открывать и проверять — локальную** (`python3 -m http.server 8765` из корня репо, http://localhost:8765/docs/index.html), прод — только если сказано иначе.
+
 Public HTML notes for the AI Native project.
 
 This repository is the public layer of project 13 AI Native. It keeps the core framework, the Personal AI OS model, the knowledge base guide, and reusable prompts in a minimal static HTML format.
