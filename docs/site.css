@@ -246,3 +246,75 @@ code { font:14px ui-monospace, "SF Mono", monospace; background:var(--soft); pad
 a { color:var(--acc); text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:3px; text-decoration-color:var(--acc2); }
 a:hover { color:var(--acc2); }
 .foot { margin-top:84px; padding-top:22px; border-top:1px solid var(--line); font-size:13.5px; color:var(--mut); line-height:1.7; }
+
+/* --- поиск: кнопка в меню + окно (site.js) --- */
+.searchbtn { display:flex; align-items:center; gap:9px; border:1px solid var(--line); border-radius:9px; background:var(--card); color:var(--mut);
+             font:15px/1 "Golos Text", -apple-system, sans-serif; padding:9px 10px 9px 12px; cursor:pointer; transition:border-color .15s, color .15s; }
+.searchbtn:hover { border-color:var(--line-strong); color:var(--ink); }
+.searchbtn svg { width:16px; height:16px; flex-shrink:0; }
+.searchbtn span { flex:1; text-align:left; }
+.searchbtn kbd, .sx-in .sx-x { font:12px/1 "Golos Text", sans-serif; color:var(--mut); border:1px solid var(--line); border-radius:5px; padding:3px 6px; background:var(--soft); }
+@media (max-width:899px){ .searchbtn { margin-left:auto; padding:9px; } .searchbtn span, .searchbtn kbd { display:none; } .topnav.js .navtoggle { margin-left:0; } }
+#sx { position:fixed; inset:0; z-index:100; }
+#sx[hidden] { display:none; }
+.sx-dim { position:absolute; inset:0; background:rgba(10,11,12,.45); backdrop-filter:blur(3px); }
+.sx-box { position:relative; max-width:640px; margin:10vh auto 0; background:var(--bg); border:1px solid var(--line-strong); border-radius:16px;
+          box-shadow:0 24px 70px rgba(0,0,0,.28); overflow:hidden; }
+.sx-in { display:flex; align-items:center; gap:12px; padding:16px 18px; border-bottom:1px solid var(--line); }
+.sx-in svg { width:20px; height:20px; color:var(--mut); flex-shrink:0; }
+.sx-in input { flex:1; border:none; outline:none; background:none; color:var(--ink); font:18px/1.3 "Golos Text", -apple-system, sans-serif; }
+.sx-in input::-webkit-search-cancel-button { display:none; }
+.sx-res { max-height:60vh; overflow-y:auto; padding:8px; }
+.sx-item { display:block; padding:12px 14px; border-radius:10px; text-decoration:none; color:var(--ink); }
+.sx-item.on, .sx-item:hover { background:var(--soft); }
+.sx-item b { display:block; font-size:16px; font-weight:600; line-height:1.35; }
+.sx-pg { display:block; font-size:11.5px; font-weight:600; text-transform:uppercase; letter-spacing:.1em; color:var(--acc2); margin-bottom:3px; }
+.sx-sn { display:block; font-size:14px; color:var(--txt3); line-height:1.5; margin-top:3px; }
+.sx-sn mark { background:none; color:var(--acc); font-weight:600; }
+.sx-empty, .sx-hint { padding:16px 14px; font-size:15px; color:var(--mut); }
+.sx-hint button { border:1px solid var(--line); background:var(--card); color:var(--txt2); border-radius:999px; padding:5px 12px; margin:6px 6px 0 0;
+                  font:14px/1.2 "Golos Text", sans-serif; cursor:pointer; }
+.sx-hint button:hover { border-color:var(--line-strong); color:var(--ink); }
+html.sx-open { overflow:hidden; }
+@media (max-width:640px){ .sx-box { margin:0; border-radius:0; height:100%; } .sx-res { max-height:none; } }
+.topnav .navlinks a.navgap { margin-top:14px; position:relative; }
+.topnav .navlinks a.navgap::before { content:""; position:absolute; left:12px; right:12px; top:-8px; border-top:1px solid var(--line); }
+@media (max-width:899px){ .topnav .navlinks a.navgap { margin-top:0; } .topnav .navlinks a.navgap::before { display:none; } }
+
+/* --- вопросы и ответы (faq.html) --- */
+.faq { margin-top:-18px; }
+.faq details { border-bottom:1px solid var(--line); scroll-margin-top:90px; }
+.faq summary { list-style:none; cursor:pointer; display:flex; gap:14px; align-items:baseline; padding:18px 4px; font-size:18px; font-weight:600; line-height:1.4; }
+.faq summary::-webkit-details-marker { display:none; }
+.faq summary::after { content:"+"; margin-left:auto; font:400 22px/1 "Golos Text", sans-serif; color:var(--mut); transition:transform .2s; }
+.faq details[open] summary::after { transform:rotate(45deg); color:var(--acc2); }
+.faq summary:hover { color:var(--acc); }
+.faq summary .qn { font-family:"Fraunces", serif; font-size:14px; color:var(--acc2); min-width:22px; }
+.faq .ans { padding:0 40px 20px 40px; color:var(--txt2); font-size:16.5px; line-height:1.65; }
+.faq .ans p + p { margin-top:10px; }
+.faq .ans a, .person a, .proj a { color:var(--acc); }
+@media (max-width:640px){ .faq .ans { padding:0 4px 18px 40px; } }
+
+/* --- об авторе / проекты --- */
+.person { display:grid; grid-template-columns:150px 1fr; gap:30px; align-items:start; margin-top:8px; }
+.person .ava { width:150px; height:150px; border-radius:50%; object-fit:cover; border:1px solid var(--line); background:var(--soft); }
+.person .txt p { color:var(--txt2); font-size:17px; }
+.person .txt p + p { margin-top:12px; }
+@media (max-width:640px){ .person { grid-template-columns:1fr; gap:18px; } .person .ava { width:110px; height:110px; } }
+.facts { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.facts .f { border:1px solid var(--line); border-radius:14px; padding:20px 22px; background:var(--card); }
+.facts .f b { display:block; font-family:"Fraunces", serif; font-size:30px; font-weight:600; color:var(--acc2); line-height:1.1; }
+.facts .f span { display:block; margin-top:6px; font-size:14.5px; color:var(--txt3); line-height:1.45; }
+@media (max-width:640px){ .facts { grid-template-columns:1fr; } }
+.proj { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.proj .card { display:flex; flex-direction:column; text-decoration:none; color:var(--ink); }
+.proj .card p { color:var(--txt3); font-size:15.5px; line-height:1.55; margin-top:8px; flex:1; }
+.proj .tag { display:inline-block; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.09em; color:var(--mut); margin-bottom:8px; }
+.proj .go { margin-top:14px; font-size:14.5px; font-weight:600; color:var(--acc); }
+@media (max-width:640px){ .proj { grid-template-columns:1fr; } }
+.cta { margin-top:30px; border:1px solid var(--line-strong); border-radius:16px; padding:26px 28px; background:var(--soft); }
+.cta b { font-size:19px; display:block; margin-bottom:6px; }
+.cta p { color:var(--txt2); font-size:16px; }
+.cta .actions { margin-top:16px; }
+.sx-in .sx-x { cursor:pointer; }
+@media (max-width:640px){ .sx-in .sx-x { font-size:0; padding:6px 8px; } .sx-in .sx-x::before { content:"✕"; font-size:14px; } }
