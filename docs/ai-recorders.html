@@ -25,26 +25,26 @@
 <meta name="twitter:image" content="https://alexivanovvv.github.io/ai-native/docs/assets/ai-recorders-og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:wght@400;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #09080a;
-    --surface: #111013;
-    --card: #17151a;
-    --card-hover: #1e1b22;
-    --border: #2c2830;
-    --border-light: #3d3845;
-    --amber: #d4941a;
-    --amber-light: #f0b535;
-    --amber-dim: #8a5f10;
-    --cream: #ede5d8;
-    --cream-dim: #9a9090;
-    --cream-muted: #5a5458;
-    --green: #2eb87a;
-    --green-dim: #1a6644;
-    --red: #c44040;
-    --red-dim: #6a2020;
-    --blue: #4a8fd4;
+    --bg: #080a0c;
+    --surface: #0e1117;
+    --card: #111318;
+    --card-hover: #181c25;
+    --border: #1e232f;
+    --border-light: #2c3342;
+    --amber: #fbbf24;
+    --amber-light: #fcd34d;
+    --amber-dim: #92400e;
+    --cream: #e8eaf0;
+    --cream-dim: #a7adbe;
+    --cream-muted: #5b6276;
+    --green: #4ade80;
+    --green-dim: #166534;
+    --red: #f87171;
+    --red-dim: #7f1d1d;
+    --blue: #38bdf8;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -52,7 +52,7 @@
   body {
     background: var(--bg);
     color: var(--cream);
-    font-family: 'Jost', sans-serif;
+    font-family: 'Golos Text', -apple-system, sans-serif;
     font-weight: 300;
     min-height: 100vh;
     overflow-x: hidden;
@@ -75,7 +75,7 @@
   header { border-bottom: 1px solid var(--border); padding: 3rem 0 4rem; animation: fadeUp 0.6s ease both; }
   .header-inner { display: flex; flex-direction: column; gap: 1.5rem; }
   .eyebrow {
-    font-family: 'Space Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 0.68rem;
     letter-spacing: 0.2em;
     color: var(--amber);
@@ -86,24 +86,24 @@
   }
   .eyebrow::before { content: ''; display: block; width: 2rem; height: 1px; background: var(--amber); }
   h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(3rem, 6vw, 5.5rem);
-    font-weight: 300;
-    line-height: 0.95;
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(2.4rem, 5vw, 4.4rem);
+    font-weight: 600;
+    line-height: 1.08;
     letter-spacing: -0.01em;
     color: var(--cream);
   }
-  h1 em { font-style: italic; color: var(--amber); }
+  h1 em { font-style: normal; background: rgba(74,222,128,.22); padding: 0 .12em; border-radius: 6px; }
   .header-meta { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
   .subtitle { font-size: 1rem; color: var(--cream-dim); max-width: 520px; line-height: 1.6; font-weight: 300; }
   .header-stats { display: flex; gap: 2rem; flex-shrink: 0; }
   .stat { text-align: right; }
-  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: var(--amber-light); display: block; line-height: 1; }
-  .stat-label { font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 0.12em; color: var(--cream-muted); text-transform: uppercase; }
+  .stat-num { font-family: 'Unbounded', sans-serif; font-size: 2rem; font-weight: 500; color: var(--amber-light); display: block; line-height: 1; }
+  .stat-label { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.12em; color: var(--cream-muted); text-transform: uppercase; }
 
   /* ── LEGEND ── */
   .legend { display: flex; gap: 1.5rem; padding: 1.2rem 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
-  .legend-item { display: flex; align-items: center; gap: 0.5rem; font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.08em; color: var(--cream-dim); text-transform: uppercase; }
+  .legend-item { display: flex; align-items: center; gap: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; letter-spacing: 0.08em; color: var(--cream-dim); text-transform: uppercase; }
   .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
   .dot-best { background: var(--amber); }
   .dot-open { background: var(--green); }
@@ -111,7 +111,7 @@
 
   /* ── SECTION LABEL ── */
   .section-label { padding: 3rem 0 2rem; display: flex; align-items: center; gap: 1.5rem; }
-  .section-label h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 300; letter-spacing: 0.02em; color: var(--cream); }
+  .section-label h2 { font-family: 'Unbounded', sans-serif; font-size: 1.6rem; font-weight: 500; letter-spacing: 0.02em; color: var(--cream); }
   .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
   /* ── PRODUCT GRID ── */
@@ -175,18 +175,18 @@
 
   /* Badges */
   .badges { display: flex; gap: 0.4rem; flex-wrap: wrap; min-height: 22px; }
-  .badge { font-family: 'Space Mono', monospace; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.25rem 0.6rem; border-radius: 2px; }
+  .badge { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.25rem 0.6rem; border-radius: 2px; }
   .badge-amber { background: rgba(212,148,26,0.15); color: var(--amber-light); border: 1px solid var(--amber-dim); }
   .badge-green { background: rgba(46,184,122,0.12); color: var(--green); border: 1px solid var(--green-dim); }
   .badge-blue { background: rgba(74,143,212,0.12); color: var(--blue); border: 1px solid rgba(74,143,212,0.3); }
   .badge-gray { background: rgba(90,84,88,0.2); color: var(--cream-dim); border: 1px solid var(--cream-muted); }
 
   /* Names */
-  .card-name { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 400; line-height: 1; color: var(--cream); }
+  .card-name { font-family: 'Unbounded', sans-serif; font-size: 1.7rem; font-weight: 500; line-height: 1; color: var(--cream); }
   .card-name a { color: inherit; text-decoration: none; }
   .card-name a:hover { color: var(--amber-light); }
   .card-name span.brand-prefix { color: var(--amber); font-style: italic; }
-  .card-brand { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; color: var(--cream-dim); text-transform: uppercase; margin-top: 0.35rem; }
+  .card-brand { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; color: var(--cream-dim); text-transform: uppercase; margin-top: 0.35rem; }
   .card-brand a { color: var(--cream-dim); text-decoration: none; border-bottom: 1px solid var(--border-light); }
   .card-brand a:hover { color: var(--amber); border-bottom-color: var(--amber-dim); }
   .card-desc { font-size: 0.88rem; line-height: 1.6; color: var(--cream-dim); font-weight: 300; }
@@ -194,20 +194,20 @@
   /* Specs */
   .specs { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; background: rgba(0,0,0,0.2); border: 1px solid var(--border); padding: 1rem; border-radius: 2px; }
   .spec-item { display: flex; flex-direction: column; gap: 0.2rem; }
-  .spec-val { font-family: 'Space Mono', monospace; font-size: 0.85rem; color: var(--cream); font-weight: 700; }
-  .spec-key { font-family: 'Space Mono', monospace; font-size: 0.56rem; letter-spacing: 0.1em; color: var(--cream-muted); text-transform: uppercase; }
+  .spec-val { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--cream); font-weight: 700; }
+  .spec-key { font-family: 'JetBrains Mono', monospace; font-size: 0.56rem; letter-spacing: 0.1em; color: var(--cream-muted); text-transform: uppercase; }
 
   /* Pricing */
   .pricing { display: flex; align-items: baseline; gap: 0.8rem; flex-wrap: wrap; }
-  .price-device { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 600; color: var(--amber-light); line-height: 1; }
-  .price-sub { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--cream-dim); letter-spacing: 0.04em; }
-  .price-free { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--green); letter-spacing: 0.04em; }
+  .price-device { font-family: 'Unbounded', sans-serif; font-size: 2.2rem; font-weight: 600; color: var(--amber-light); line-height: 1; }
+  .price-sub { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--cream-dim); letter-spacing: 0.04em; }
+  .price-free { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--green); letter-spacing: 0.04em; }
 
   /* Pros/cons */
   .pros-cons { display: flex; flex-direction: column; gap: 0.4rem; }
   .pro, .con { font-size: 0.82rem; color: var(--cream-dim); display: flex; gap: 0.6rem; align-items: baseline; line-height: 1.45; }
-  .pro::before { content: '+'; font-family: 'Space Mono', monospace; font-size: 0.75rem; color: var(--green); flex-shrink: 0; font-weight: 700; }
-  .con::before { content: '−'; font-family: 'Space Mono', monospace; font-size: 0.75rem; color: var(--red); flex-shrink: 0; font-weight: 700; }
+  .pro::before { content: '+'; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--green); flex-shrink: 0; font-weight: 700; }
+  .con::before { content: '−'; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--red); flex-shrink: 0; font-weight: 700; }
 
   /* CTA link */
   .card-cta {
@@ -215,7 +215,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    font-family: 'Space Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 0.65rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -234,24 +234,24 @@
   .table-wrap { overflow-x: auto; border: 1px solid var(--border); }
   table { width: 100%; border-collapse: collapse; font-size: 0.82rem; min-width: 860px; }
   thead tr { background: var(--surface); border-bottom: 2px solid var(--border-light); }
-  th { padding: 1rem 1.2rem; text-align: left; font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cream-dim); font-weight: 400; white-space: nowrap; }
+  th { padding: 1rem 1.2rem; text-align: left; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cream-dim); font-weight: 400; white-space: nowrap; }
   th:first-child { color: var(--cream); }
   tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
   tbody tr:hover { background: var(--surface); }
   td { padding: 0.9rem 1.2rem; color: var(--cream-dim); vertical-align: middle; }
   td:first-child { color: var(--cream); font-weight: 500; white-space: nowrap; }
-  td.mono { font-family: 'Space Mono', monospace; font-size: 0.75rem; }
+  td.mono { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; }
   .check { color: var(--green); font-weight: 700; }
   .cross { color: var(--red); }
   .partial { color: var(--amber); }
-  .price-cell { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--amber-light); }
+  .price-cell { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--amber-light); }
   tbody tr.winner td:first-child::before { content: '★ '; color: var(--amber); }
 
-  td a { color: var(--amber); text-decoration: none; font-family: 'Space Mono', monospace; font-size: 0.7rem; }
+  td a { color: var(--amber); text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; }
   td a:hover { color: var(--amber-light); text-decoration: underline; }
 
   /* ── DISCLAIMER ── */
-  .disclaimer { border-top: 1px solid var(--border); padding: 2rem 0; font-family: 'Space Mono', monospace; font-size: 0.62rem; color: var(--cream-muted); letter-spacing: 0.06em; line-height: 1.8; }
+  .disclaimer { border-top: 1px solid var(--border); padding: 2rem 0; font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--cream-muted); letter-spacing: 0.06em; line-height: 1.8; }
 
   /* ── ANIMATIONS ── */
   @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
@@ -271,7 +271,7 @@
   <header>
     <div class="header-inner">
       <div class="eyebrow">AI-рекордеры · Обзор 2026</div>
-      <h1>Оффлайн-запись<br>и <em>AI-обработка</em><br>разговоров</h1>
+      <h1>Офлайн-запись<br>и <em>AI-обработка</em><br>разговоров</h1>
       <div class="header-meta">
         <p class="subtitle">
           Устройства, которые записывают живые встречи и обрабатывают их через AI -
@@ -672,23 +672,23 @@
   <!-- WINNER SUMMARY -->
   <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 3rem;">
     <div style="background: var(--card); padding: 1.5rem;">
-      <div style="font-family:'Space Mono',monospace; font-size:0.58rem; letter-spacing:0.14em; color:var(--amber); text-transform:uppercase; margin-bottom:0.6rem;">Лучшее качество записи</div>
-      <div style="font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--cream);">Plaud Note Pro</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:0.58rem; letter-spacing:0.14em; color:var(--amber); text-transform:uppercase; margin-bottom:0.6rem;">Лучшее качество записи</div>
+      <div style="font-family:'Unbounded',sans-serif; font-weight:500; font-size:1.2rem; color:var(--cream);">Plaud Note Pro</div>
       <div style="font-size:0.8rem; color:var(--cream-dim); margin-top:0.3rem;">4 MEMS + VPU, до 50 ч, InstantView дисплей</div>
     </div>
     <div style="background: var(--card); padding: 1.5rem;">
-      <div style="font-family:'Space Mono',monospace; font-size:0.58rem; letter-spacing:0.14em; color:var(--green); text-transform:uppercase; margin-bottom:0.6rem;">Лучшая цена / открытость</div>
-      <div style="font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--cream);">Omi AI</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:0.58rem; letter-spacing:0.14em; color:var(--green); text-transform:uppercase; margin-bottom:0.6rem;">Лучшая цена / открытость</div>
+      <div style="font-family:'Unbounded',sans-serif; font-weight:500; font-size:1.2rem; color:var(--cream);">Omi AI</div>
       <div style="font-size:0.8rem; color:var(--cream-dim); margin-top:0.3rem;">$179, open source, open API + MCP</div>
     </div>
     <div style="background: var(--card); padding: 1.5rem;">
-      <div style="font-family:'Space Mono',monospace; font-size:0.58rem; letter-spacing:0.14em; color:var(--blue); text-transform:uppercase; margin-bottom:0.6rem;">Самый компактный</div>
-      <div style="font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--cream);">Soundcore Work</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:0.58rem; letter-spacing:0.14em; color:var(--blue); text-transform:uppercase; margin-bottom:0.6rem;">Самый компактный</div>
+      <div style="font-family:'Unbounded',sans-serif; font-weight:500; font-size:1.2rem; color:var(--cream);">Soundcore Work</div>
       <div style="font-size:0.8rem; color:var(--cream-dim); margin-top:0.3rem;">Размер монеты, 150+ языков, быстрая зарядка</div>
     </div>
     <div style="background: var(--card); padding: 1.5rem;">
-      <div style="font-family:'Space Mono',monospace; font-size:0.58rem; letter-spacing:0.14em; color:var(--cream-muted); text-transform:uppercase; margin-bottom:0.6rem;">Мультифункция</div>
-      <div style="font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--cream);">Ray-Ban Meta</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:0.58rem; letter-spacing:0.14em; color:var(--cream-muted); text-transform:uppercase; margin-bottom:0.6rem;">Мультифункция</div>
+      <div style="font-family:'Unbounded',sans-serif; font-weight:500; font-size:1.2rem; color:var(--cream);">Ray-Ban Meta</div>
       <div style="font-size:0.8rem; color:var(--cream-dim); margin-top:0.3rem;">Gen 3: очки + AI + офлайн-перевод + видео</div>
     </div>
   </div>
