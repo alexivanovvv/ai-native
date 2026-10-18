@@ -1,10 +1,10 @@
 :root {
-  --ink:#231e14; --mut:#948a72; --line:#e2d7bf; --acc:#15803d; --acc2:#b45309; --bg:#f6f1e6; --soft:#efe7d5;
+  --ink:#231e14; --mut:#6f6650; --line:#e2d7bf; --acc:#14703a; --acc2:#9a4508; --bg:#f6f1e6; --on-acc:#fff; --soft:#efe7d5;
   --card:#faf6ee; --line-strong:#cdbd97; --txt2:#3f392c; --txt3:#5c5646; --bar-track:#e2d7bf; --bar-mut:rgba(35,30,20,.22);
   /* палитра секций/принципов = слайды курса (зеленый, оранжевый, голубой, розовый, янтарный,
      фиолетовый - порядок как на слайде «Что у нас уже есть»), затемнена под бежевую бумагу */
-  --c1:#15803d; --c2:#c2410c; --c3:#0369a1; --c4:#be185d; --c5:#a16207; --c6:#7e22ce;
-  --hl:rgba(21,128,61,.16);
+  --c1:#14703a; --c2:#b03a0a; --c3:#0369a1; --c4:#be185d; --c5:#8a5806; --c6:#7e22ce;
+  --hl:rgba(20,112,58,.15);
   /* шрифты = слайды курса (slides-generator/template.html) */
   --f-display:"Unbounded", "Golos Text", -apple-system, sans-serif;
   --f-head:"Manrope", "Golos Text", -apple-system, sans-serif;
@@ -12,13 +12,13 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --ink:#e8eaf0; --mut:#a7adbe; --line:#1e232f; --acc:#4ade80; --acc2:#fbbf24; --bg:#080a0c; --soft:rgba(255,255,255,.045);
+    --ink:#e8eaf0; --mut:#a7adbe; --line:#1e232f; --acc:#4ade80; --acc2:#fbbf24; --on-acc:#06240f; --bg:#080a0c; --soft:rgba(255,255,255,.045);
     --card:#111318; --line-strong:#2c3342; --txt2:#d4d7e0; --txt3:#a7adbe; --bar-track:#1e232f; --bar-mut:rgba(255,255,255,.26);
     --c1:#4ade80; --c2:#fb923c; --c3:#38bdf8; --c4:#f472b6; --c5:#fbbf24; --c6:#c084fc; --hl:rgba(74,222,128,.22);
   }
 }
 :root[data-theme="dark"] {
-  --ink:#e8eaf0; --mut:#a7adbe; --line:#1e232f; --acc:#4ade80; --acc2:#fbbf24; --bg:#080a0c; --soft:rgba(255,255,255,.045);
+  --ink:#e8eaf0; --mut:#a7adbe; --line:#1e232f; --acc:#4ade80; --acc2:#fbbf24; --on-acc:#06240f; --bg:#080a0c; --soft:rgba(255,255,255,.045);
   --card:#111318; --line-strong:#2c3342; --txt2:#d4d7e0; --txt3:#a7adbe; --bar-track:#1e232f; --bar-mut:rgba(255,255,255,.26);
   --c1:#4ade80; --c2:#fb923c; --c3:#38bdf8; --c4:#f472b6; --c5:#fbbf24; --c6:#c084fc; --hl:rgba(74,222,128,.22);
 }
@@ -83,16 +83,16 @@ body { background:var(--bg); color:var(--ink); font:18px/1.65 var(--f-body);
 
 /* --- контентная колонка --- */
 .content { max-width:900px; margin:0 auto; padding:64px 36px 120px; }
-@media (max-width:640px){ .content { padding:32px 22px 90px; } }
+@media (max-width:640px){ .content { padding:32px 22px 90px; } h1 { font-size:34px; } }
 
 /* --- шапка страницы --- */
 .brand { display:flex; align-items:center; gap:20px; margin-top:0; }
 .brand .logo { width:60px; height:60px; flex-shrink:0; }
-h1 { font-family:var(--f-display); font-size:38px; font-weight:600; letter-spacing:-.015em; line-height:1.18; }
+h1 { font-family:var(--f-display); font-size:44px; font-weight:600; letter-spacing:-.02em; line-height:1.14; }
 /* слово на плашке - как в заголовках слайдов */
 h1 em { font-style:normal; background:var(--hl); padding:0 .14em; border-radius:4px; -webkit-box-decoration-break:clone; box-decoration-break:clone; }
-.kicker { font-family:var(--f-head); font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:.14em; color:var(--acc); margin-bottom:10px; }
-.sub { color:var(--mut); margin-top:8px; font-size:16px; max-width:700px; line-height:1.6; }
+.kicker { font-family:var(--f-head); font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:.14em; color:var(--acc); margin-bottom:16px; }
+.sub { color:var(--txt3); margin-top:16px; font-size:18px; max-width:700px; line-height:1.6; }
 .meta { display:flex; flex-wrap:wrap; gap:8px; margin-top:22px; }
 .chip { font-size:14px; color:var(--txt3); border:1px solid var(--line); border-radius:8px; padding:6px 13px; background:var(--soft); }
 .chip b { font-weight:600; color:var(--ink); }
@@ -101,7 +101,7 @@ h1 em { font-style:normal; background:var(--hl); padding:0 .14em; border-radius:
 .btn { display:inline-flex; align-items:center; gap:8px; text-decoration:none !important; border:1px solid var(--line); border-radius:10px;
        padding:11px 18px; background:var(--card); color:var(--ink); font-size:15px; font-weight:500; transition:border-color .2s, transform .2s; }
 .btn:hover { border-color:var(--line-strong); transform:translateY(-2px); }
-.btn.primary { background:var(--acc); border-color:var(--acc); color:#fff; }
+.btn.primary { background:var(--acc); border-color:var(--acc); color:var(--on-acc); font-weight:600; }
 .btn.primary:hover { border-color:var(--acc); opacity:.92; }
 
 /* --- оглавление (используется на памятке) --- */
